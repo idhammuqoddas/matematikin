@@ -1,3 +1,4 @@
+var daftarbilprima = [2,3,5,7,11];
 function cekbulat(n){
     return n==Math.round(n)
 };
