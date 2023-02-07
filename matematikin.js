@@ -1,4 +1,3 @@
-var daftarbilprima = [2,3,5,7,11];
 function cekbulat(n){
     return n==Math.round(n)
 };
@@ -255,7 +254,7 @@ function det2(a11,a12,a21,a22){
     return a11*a22-a12*a21
 }
 
-function minorsebagian(matriks,baris,kolom){
+function minorsebagian(matriks=[],baris=1,kolom=1){
     let hasil = JSON.parse(JSON.stringify(matriks));
     hasil.splice(baris-1,1);
     for(let i=0;i<hasil.length;i++){
@@ -264,7 +263,7 @@ function minorsebagian(matriks,baris,kolom){
     return hasil;
 }
 
-function det(matriks){
+function det(matriks=[]){
     if(matriks.length==2){
        return matriks[0][0]*matriks[1][1]-matriks[0][1]*matriks[1][0]
     }else{
@@ -278,11 +277,11 @@ function det(matriks){
     }
  }
 
-function minor(matriks,baris,kolom){
+function minor(matriks=[],baris=1,kolom=1){
     return det(minorsebagian(matriks,baris,kolom));
 }
 
-function matriksminor(matriks){
+function matriksminor(matriks=[]){
     let hasil = [];
     for(let i=0;i<matriks.length;i++){
         hasil[i]=[];
@@ -293,7 +292,7 @@ function matriksminor(matriks){
     return hasil;
 }
 
-function matrikskofaktor(matriks){
+function matrikskofaktor(matriks=[]){
     let hasil = matriksminor(matriks);
     for(let i=0;i<hasil.length;i++){
         for(let j=0;j<hasil.length;j++){
@@ -303,7 +302,7 @@ function matrikskofaktor(matriks){
     return hasil;
 }
 
-function transpose(matriks){
+function transpose(matriks=[]){
     let hasil = [];
     for(let i=0;i<matriks[0].length;i++){
         hasil[i]=[];
@@ -314,8 +313,12 @@ function transpose(matriks){
     return hasil;
 }
 
-function adjoin(matriks){
-    return transpose(matrikskofaktor(matriks));
+function adjoin(matriks=[]){
+    let hasil = []
+    if(matriks.length==2){
+        hasil = [[matriks[1][1],-matriks[0][1]],[-matriks[1][0],matriks[0][0]]]
+    }else{hasil = transpose(matrikskofaktor(matriks))}
+    return hasil;
 }
 
 function kalimatriks(matriksatauskalar,matriks){
@@ -340,7 +343,7 @@ function kalimatriks(matriksatauskalar,matriks){
     }
     return hasil
 }
-function matriksinvers(matriks){
+function matriksinvers(matriks=[]){
     let hasil = adjoin(matriks);
     for(let i=0;i<hasil.length;i++){
         for(let j=0;j<hasil.length;j++){
@@ -349,6 +352,24 @@ function matriksinvers(matriks){
     }
     return hasil
 }
+
+//Bentuk matriks
+function bentukMatriks(matriks=[]){
+    let hasil = String.raw`\begin{pmatrix}`;
+    for (let i = 0; i < matriks.length; i++) {
+        for (let j = 0; j < matriks[0].length; j++) {
+            hasil += matriks[i][j]
+            if (j!=matriks[0].length-1) {
+                hasil += String.raw`&`
+            }
+        }
+        if (i!=matriks.length-1) {
+            hasil+=String.raw`\\`
+        }else{hasil+=String.raw`\end{pmatrix}`}
+    }
+    return hasil;
+}
+
  function jumlah2(a,b){
     return a+b;
   }
@@ -356,15 +377,15 @@ function matriksinvers(matriks){
     return n.reduce(jumlah2)
   }
 
-  function jumlahkuadrat2(a,b){
+  function jumlahkuadrat2(a=0,b=0){
       return a*a+b*b
   }
 
-  function jumlahkuadrat(x){
+  function jumlahkuadrat(x=[]){
       return x.reduce(jumlahkuadrat2)
   }
 
-  function panjangvektor(vektor){
+  function panjangvektor(vektor=[]){
       let pjg=0;
       for(let i=0;i<vektor.length;i++){
           pjg+=vektor[i]*vektor[i]
@@ -443,13 +464,17 @@ function plusminus(){
     return Math.pow(-1,ac(2))
 }
 
+function plmi(n=0){
+    return plusminus()*n
+}
+
 function pecahan(pembilang,penyebut){
     let faktor = fpb2(pembilang,penyebut)
     if(faktor==penyebut){
       return pembilang/penyebut
     }else{return String.raw`\dfrac{${pembilang/faktor}}{${penyebut/faktor}}`}
   }
-  function koef(n){
+  function koef(n=0){
       if(n==1){
           return ""
       }else if(n==-1){
@@ -460,6 +485,29 @@ function pecahan(pembilang,penyebut){
     if(n<0){
       return n
     }else{return `+${n}`}
+  }
+  function tanda2(n){
+    if(n==-1){
+        return `&minus; `;
+    }
+    else if(n==1){
+        return "+ ";
+    }
+    else if(n<0){
+      return `&minus; ${Math.abs(n)}`
+    }else{return `+ ${n}`}
+  }
+
+  function tanda3(n=0){
+      if(n==-1){
+          return `&minus;`;
+      }
+      else if(n==1){
+          return "";
+      }
+    else if(n<0){
+        return `&minus;${Math.abs(n)}`
+      }else{return `${n}`}
   }
 
   var min9sampai9tanpa0 = [];
@@ -476,7 +524,7 @@ function konst(n){
         return tanda1(n)
     }
 }
-function kurmin(angka){
+function kurmin(angka=0){
   if(angka>=0){
     return angka
   }else{return `(${angka})`}
@@ -522,4 +570,53 @@ const pilihacak = (arr, num = 1) => {
       let j = Math.floor(Math.random() * (i + 1));
       [array[i], array[j]] = [array[j], array[i]];
     }
+  }
+
+  function sin(x=0){
+    return Math.sin(x*Math.PI/180);
+  }
+  function cos(x=0){
+    return Math.cos(x*Math.PI/180);
+  }
+
+  function svgawal(lebar=0,tinggi=0,rasio=1,margin=0){
+    return String.raw`<svg xmlns='http://www.w3.org/2000/svg' style='max-width: ${rasio*lebar}px; max-height: ${rasio*tinggi}px;' viewbox='${-margin} ${-margin} ${lebar} ${tinggi}'>`;
+  }
+  function svgsegi(kumpulantitik=[],tebalgaris=1,warnagaris="black",isi="none",transparansi=1){
+    let listtitik = `${kumpulantitik[0][0]},${kumpulantitik[0][1]} `;
+    for (var i = 1; i < kumpulantitik.length; i++) {
+        listtitik += String.raw`${kumpulantitik[i][0]},${kumpulantitik[i][1]} `;
+      }
+      return String.raw`<polygon points="${listtitik}" style="stroke:${warnagaris}; stroke-width:${tebalgaris}; fill:${isi}; opacity:${transparansi}"/>`;
+  }
+  function panjanggaris(garis=[]){
+    return Math.sqrt((garis[1][0]-garis[0][0])*(garis[1][0]-garis[0][0])+(garis[1][1]-garis[0][1])*(garis[1][1]-garis[0][1]))
+  }
+  function svgsudut(arr=[],jarijari=1,warnagaris="black",warnaisi="none",ketampakan=1,tebalgaris=1){
+    return String.raw`<path d="M ${arr[1][0]} ${arr[1][1]} L ${arr[1][0]+jarijari*(arr[0][0]-arr[1][0])/panjanggaris([arr[0],arr[1]])} ${arr[1][1]+jarijari*(arr[0][1]-arr[1][1])/panjanggaris([arr[0],arr[1]])} A ${jarijari} ${jarijari} 0 0 1 ${arr[1][0]+jarijari*(arr[2][0]-arr[1][0])/panjanggaris([arr[2],arr[1]])} ${arr[1][1]+jarijari*(arr[2][1]-arr[1][1])/panjanggaris([arr[2],arr[1]])} z" stroke="${warnagaris}" fill="${warnaisi}" fill-opacity="${ketampakan}" stroke-width="${tebalgaris}"/>`;
+  }
+  function svglabelgaris(garis=[],namalabel="A",ukuran=1.5,anchor="middle",baseline="central",jaraktambahanx=0,jaraktambahany=0){
+    return String.raw`<text x="${(garis[0][0]+garis[1][0])/2+jaraktambahanx}"  y="${(garis[0][1]+garis[1][1])/2+jaraktambahany}" text-anchor="${anchor}" dominant-baseline="${baseline}" style="font-family:'Times New Roman', Times, serif; font-size:${ukuran}em">${namalabel}</text>`;
+  }
+
+  function svglabeltitik(titik=[0,0],namalabel="A",ukuran=1.5,anchor="middle",baseline="central",jaraktambahanx=0,jaraktambahany=0){
+    return String.raw`<text x="${titik[0]+jaraktambahanx}"  y="${titik[1]+jaraktambahany}" text-anchor="${anchor}" dominant-baseline="${baseline}" style="font-family:'Times New Roman', Times, serif; font-size:${ukuran}em">${namalabel}</text>`;
+  }
+
+  function titikpotong(garis1=[],garis2=[]){
+    return [(-garis1[0][1]*garis1[1][0]*garis2[0][0] + garis1[0][0]*garis1[1][1]*garis2[0][0] + 
+        garis1[0][1]*garis1[1][0]*garis2[1][0] - garis1[0][0]*garis1[1][1]*garis2[1][0] + 
+        garis1[0][0]*garis2[0][1]*garis2[1][0] - garis1[1][0]*garis2[0][1]*garis2[1][0] - 
+        garis1[0][0]*garis2[0][0]*garis2[1][1] + 
+        garis1[1][0]*garis2[0][0]*garis2[1][1])/(garis1[0][1]*garis2[0][0] - 
+        garis1[1][1]*garis2[0][0] - garis1[0][0]*garis2[0][1] + garis1[1][0]*garis2[0][1] - 
+        garis1[0][1]*garis2[1][0] + garis1[1][1]*garis2[1][0] + garis1[0][0]*garis2[1][1] - 
+        garis1[1][0]*garis2[1][1]),(garis1[0][1]*garis1[1][0]*garis2[0][1] - garis1[0][0]*garis1[1][1]*garis2[0][1] - 
+            garis1[0][1]*garis2[0][1]*garis2[1][0] + garis1[1][1]*garis2[0][1]*garis2[1][0] - 
+            garis1[0][1]*garis1[1][0]*garis2[1][1] + garis1[0][0]*garis1[1][1]*garis2[1][1] + 
+            garis1[0][1]*garis2[0][0]*garis2[1][1] - 
+            garis1[1][1]*garis2[0][0]*garis2[1][1])/(-garis1[0][1]*garis2[0][0] + 
+            garis1[1][1]*garis2[0][0] + garis1[0][0]*garis2[0][1] - garis1[1][0]*garis2[0][1] + 
+            garis1[0][1]*garis2[1][0] - garis1[1][1]*garis2[1][0] - garis1[0][0]*garis2[1][1] + 
+            garis1[1][0]*garis2[1][1])]
   }
