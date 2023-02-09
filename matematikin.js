@@ -582,6 +582,12 @@ const pilihacak = (arr, num = 1) => {
   function svgawal(lebar=0,tinggi=0,rasio=1,margin=0){
     return String.raw`<svg xmlns='http://www.w3.org/2000/svg' style='max-width: ${rasio*lebar}px; max-height: ${rasio*tinggi}px;' viewbox='${-margin} ${-margin} ${lebar} ${tinggi}'>`;
   }
+ function svggaris(garis=[],tebalgaris=1,warna="black",dasharray=""){
+    return String.raw`<line x1="${garis[0][0]}" y1="${garis[0][1]}"
+    x2="${garis[1][0]}" y2="${garis[1][1]}"
+    stroke="${warna}"
+    stroke-width="${tebalgaris}" stroke-dasharray="${dasharray}"/>`
+  }
   function svgsegi(kumpulantitik=[],tebalgaris=1,warnagaris="black",isi="none",transparansi=1){
     let listtitik = `${kumpulantitik[0][0]},${kumpulantitik[0][1]} `;
     for (var i = 1; i < kumpulantitik.length; i++) {
@@ -604,19 +610,35 @@ const pilihacak = (arr, num = 1) => {
   }
 
   function titikpotong(garis1=[],garis2=[]){
-    return [(-garis1[0][1]*garis1[1][0]*garis2[0][0] + garis1[0][0]*garis1[1][1]*garis2[0][0] + 
-        garis1[0][1]*garis1[1][0]*garis2[1][0] - garis1[0][0]*garis1[1][1]*garis2[1][0] + 
-        garis1[0][0]*garis2[0][1]*garis2[1][0] - garis1[1][0]*garis2[0][1]*garis2[1][0] - 
-        garis1[0][0]*garis2[0][0]*garis2[1][1] + 
-        garis1[1][0]*garis2[0][0]*garis2[1][1])/(garis1[0][1]*garis2[0][0] - 
-        garis1[1][1]*garis2[0][0] - garis1[0][0]*garis2[0][1] + garis1[1][0]*garis2[0][1] - 
-        garis1[0][1]*garis2[1][0] + garis1[1][1]*garis2[1][0] + garis1[0][0]*garis2[1][1] - 
-        garis1[1][0]*garis2[1][1]),(garis1[0][1]*garis1[1][0]*garis2[0][1] - garis1[0][0]*garis1[1][1]*garis2[0][1] - 
-            garis1[0][1]*garis2[0][1]*garis2[1][0] + garis1[1][1]*garis2[0][1]*garis2[1][0] - 
-            garis1[0][1]*garis1[1][0]*garis2[1][1] + garis1[0][0]*garis1[1][1]*garis2[1][1] + 
-            garis1[0][1]*garis2[0][0]*garis2[1][1] - 
-            garis1[1][1]*garis2[0][0]*garis2[1][1])/(-garis1[0][1]*garis2[0][0] + 
-            garis1[1][1]*garis2[0][0] + garis1[0][0]*garis2[0][1] - garis1[1][0]*garis2[0][1] + 
-            garis1[0][1]*garis2[1][0] - garis1[1][1]*garis2[1][0] - garis1[0][0]*garis2[1][1] + 
-            garis1[1][0]*garis2[1][1])]
+    let x1 = garis1[0][0];
+    let y1 = garis1[0][1];
+    let x2 = garis1[1][0];
+    let y2 = garis1[1][1];
+    let x3 = garis2[0][0];
+    let y3 = garis2[0][1];
+    let x4 = garis2[1][0];
+    let y4 = garis2[1][1];
+    let m1 = (y2-y1)/(x2-x1);
+    let m2 = (y4-y3)/(x4-x3);
+    let xtipot = (-m1*x1+m2*x3+y1-y3)/(m2-m1);
+    let ytipot = (-m1*m2*x1+m1*m2*x3+m2*y1-m1*y3)/(m2-m1);
+    return [xtipot,ytipot]
+  }
+  function titiktengah(garis=[]){
+    let xA = garis[0][0];
+    let yA = garis[0][1];
+    let xB = garis[1][0];
+    let yB = garis[1][1];
+    let x = (xA+xB)/2;
+    let y = (yA+yB)/2;
+    return [x,y]
+  }
+  function titikpadagaris(garis=[],perbandingan=1/1){
+    let xA = garis[0][0];
+    let xB = garis[1][0];
+    let yA = garis[0][1];
+    let yB = garis[1][1];
+    let x = (perbandingan*xB+xA)/(perbandingan+1);
+    let y = (perbandingan*yB+yA)/(perbandingan+1);
+    return [x,y]
   }
