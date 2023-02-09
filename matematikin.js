@@ -600,6 +600,7 @@ const pilihacak = (arr, num = 1) => {
       let isi = opsi.isi || "none";
       let transparanisi = opsi.tampakisi || 1;
       let tampakgaris = opsi.tampakgaris || 1;
+      let tebalgaris = opsi.tebalgaris || 1;
       return String.raw`<polygon points="${listtitik}" style="stroke:${warnagaris}; stroke-width:${tebalgaris}; fill:${isi}; opacity:${transparanisi}; stroke-opacity:${tampakgaris}"/>`;
   }
   function panjanggaris(garis=[]){
