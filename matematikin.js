@@ -579,34 +579,60 @@ const pilihacak = (arr, num = 1) => {
     return Math.cos(x*Math.PI/180);
   }
 
-  function svgawal(lebar=0,tinggi=0,rasio=1,margin=0){
-    return String.raw`<svg xmlns='http://www.w3.org/2000/svg' style='max-width: ${rasio*lebar}px; max-height: ${rasio*tinggi}px;' viewbox='${-margin} ${-margin} ${lebar} ${tinggi}'>`;
+   function svgawal(lebar=0,tinggi=0,rasio=1,margin=0){
+    return String.raw`<svg xmlns='http://www.w3.org/2000/svg' style='max-width: ${rasio*(lebar+2*margin)}px; max-height: ${rasio*(tinggi+2*margin)}px;' viewbox='${-margin} ${-margin} ${lebar+2*margin} ${tinggi+2*margin}'>`;
   }
- function svggaris(garis=[],tebalgaris=1,warna="black",dasharray=""){
+  function svggaris(garis=[],opsi={}){
+    let tbl = opsi.tebalgaris || 1;
+    let warna = opsi.warna || "black";
+    let dash = opsi.dash || "";
     return String.raw`<line x1="${garis[0][0]}" y1="${garis[0][1]}"
     x2="${garis[1][0]}" y2="${garis[1][1]}"
     stroke="${warna}"
-    stroke-width="${tebalgaris}" stroke-dasharray="${dasharray}"/>`
+    stroke-width="${tbl}" stroke-dasharray="${dash}"/>`
   }
-  function svgsegi(kumpulantitik=[],tebalgaris=1,warnagaris="black",isi="none",transparansi=1){
+  function svgsegi(kumpulantitik=[],opsi={}){
     let listtitik = `${kumpulantitik[0][0]},${kumpulantitik[0][1]} `;
     for (var i = 1; i < kumpulantitik.length; i++) {
         listtitik += String.raw`${kumpulantitik[i][0]},${kumpulantitik[i][1]} `;
       }
-      return String.raw`<polygon points="${listtitik}" style="stroke:${warnagaris}; stroke-width:${tebalgaris}; fill:${isi}; opacity:${transparansi}"/>`;
+      let warnagaris = opsi.warnagaris || "black";
+      let isi = opsi.isi || "none";
+      let transparanisi = opsi.tampakisi || 1;
+      let tampakgaris = opsi.tampakgaris || 1;
+      return String.raw`<polygon points="${listtitik}" style="stroke:${warnagaris}; stroke-width:${tebalgaris}; fill:${isi}; opacity:${transparanisi}; stroke-opacity:${tampakgaris}"/>`;
   }
   function panjanggaris(garis=[]){
     return Math.sqrt((garis[1][0]-garis[0][0])*(garis[1][0]-garis[0][0])+(garis[1][1]-garis[0][1])*(garis[1][1]-garis[0][1]))
   }
-  function svgsudut(arr=[],jarijari=1,warnagaris="black",warnaisi="none",ketampakan=1,tebalgaris=1){
-    return String.raw`<path d="M ${arr[1][0]} ${arr[1][1]} L ${arr[1][0]+jarijari*(arr[0][0]-arr[1][0])/panjanggaris([arr[0],arr[1]])} ${arr[1][1]+jarijari*(arr[0][1]-arr[1][1])/panjanggaris([arr[0],arr[1]])} A ${jarijari} ${jarijari} 0 0 1 ${arr[1][0]+jarijari*(arr[2][0]-arr[1][0])/panjanggaris([arr[2],arr[1]])} ${arr[1][1]+jarijari*(arr[2][1]-arr[1][1])/panjanggaris([arr[2],arr[1]])} z" stroke="${warnagaris}" fill="${warnaisi}" fill-opacity="${ketampakan}" stroke-width="${tebalgaris}"/>`;
+  function svgsudut(arr=[],opsi={}){
+    let r = opsi.r || 1;
+    let tebalgaris = opsi.tebalgaris || 1;
+    let warnagaris = opsi.warnagaris || "black";
+    let isi = opsi.isi || "none";
+    let tampakisi = opsi.tampakisi || 1;
+    let tampakgaris = opsi.tampakgaris || 1;
+    let rotasi = opsi.rotasi || 0;
+    let busurbesar = opsi.busurbesar || 0;
+    let arah = opsi.arah || 1;
+    return String.raw`<path d="M ${arr[1][0]} ${arr[1][1]} L ${arr[1][0]+r*(arr[0][0]-arr[1][0])/panjanggaris([arr[0],arr[1]])} ${arr[1][1]+r*(arr[0][1]-arr[1][1])/panjanggaris([arr[0],arr[1]])} A ${r} ${r} ${rotasi} ${busurbesar} ${arah} ${arr[1][0]+r*(arr[2][0]-arr[1][0])/panjanggaris([arr[2],arr[1]])} ${arr[1][1]+r*(arr[2][1]-arr[1][1])/panjanggaris([arr[2],arr[1]])} z" stroke="${warnagaris}" fill="${isi}" fill-opacity="${tampakisi}" stroke-width="${tebalgaris}" stroke-opacity:"${tampakgaris}"/>`;
   }
-  function svglabelgaris(garis=[],namalabel="A",ukuran=1.5,anchor="middle",baseline="central",jaraktambahanx=0,jaraktambahany=0){
-    return String.raw`<text x="${(garis[0][0]+garis[1][0])/2+jaraktambahanx}"  y="${(garis[0][1]+garis[1][1])/2+jaraktambahany}" text-anchor="${anchor}" dominant-baseline="${baseline}" style="font-family:'Times New Roman', Times, serif; font-size:${ukuran}em">${namalabel}</text>`;
+  function svglabelgaris(garis=[],namalabel="A",opsi={}){
+    let ukuran = opsi.ukuran || 1;
+    let anchor = opsi.anchor || "start";
+    let baseline = opsi.baseline || "auto";
+    let xplus = opsi.xplus || 0;
+    let yplus = opsi.yplus || 0;
+    return String.raw`<text x="${(garis[0][0]+garis[1][0])/2+xplus}"  y="${(garis[0][1]+garis[1][1])/2+yplus}" text-anchor="${anchor}" dominant-baseline="${baseline}" style="font-family:'Times New Roman', Times, serif; font-size:${ukuran}em">${namalabel}</text>`;
   }
 
-  function svglabeltitik(titik=[0,0],namalabel="A",ukuran=1.5,anchor="middle",baseline="central",jaraktambahanx=0,jaraktambahany=0){
-    return String.raw`<text x="${titik[0]+jaraktambahanx}"  y="${titik[1]+jaraktambahany}" text-anchor="${anchor}" dominant-baseline="${baseline}" style="font-family:'Times New Roman', Times, serif; font-size:${ukuran}em">${namalabel}</text>`;
+  function svglabeltitik(titik=[0,0],namalabel="A",opsi={}){
+    let ukuran = opsi.ukuran || 1;
+    let anchor = opsi.anchor || "start";
+    let baseline = opsi.baseline || "auto";
+    let xplus = opsi.xplus || 0;
+    let yplus = opsi.yplus || 0;
+    return String.raw`<text x="${titik[0]+xplus}"  y="${titik[1]+yplus}" text-anchor="${anchor}" dominant-baseline="${baseline}" style="font-family:'Times New Roman', Times, serif; font-size:${ukuran}em">${namalabel}</text>`;
   }
 
   function titikpotong(garis1=[],garis2=[]){
@@ -641,4 +667,13 @@ const pilihacak = (arr, num = 1) => {
     let x = (perbandingan*xB+xA)/(perbandingan+1);
     let y = (perbandingan*yB+yA)/(perbandingan+1);
     return [x,y]
+  }
+
+  function svglingkaran(titikpusat=[0,0],jarijari=1,options={}){
+    let isi = options.isi || "none";
+    let warnagaris = options.warnagaris || "black";
+    let dash = options.dash || "";
+    let transparanisi = options.transparanisi || 1;
+    let tebalgaris = options.tebalgaris || 1;
+    return String.raw`<circle cx="${titikpusat[0]}" cy="${titikpusat[1]}" r="${jarijari}" style="stroke:${warnagaris}; stroke-width:${tebalgaris}; stroke-dasharray:${dash}; fill: ${isi}; fill-transparency:${transparanisi}"/>`;
   }
