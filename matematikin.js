@@ -582,6 +582,70 @@ const pilihacak = (arr, num = 1) => {
    function svgawal(lebar=0,tinggi=0,rasio=1,margin=0){
     return String.raw`<svg xmlns='http://www.w3.org/2000/svg' style='max-width: ${rasio*(lebar+2*margin)}px; max-height: ${rasio*(tinggi+2*margin)}px;' viewbox='${-margin} ${-margin} ${lebar+2*margin} ${tinggi+2*margin}'>`;
   }
+    function svgkoord(intervalx=[0,0],intervaly=[0,0],opsi={}){
+    var lebar = Math.abs(intervalx[1]-intervalx[0]);
+    var tinggi = Math.abs(intervaly[1]-intervaly[0]);
+    var rasio = opsi.rasio || 1;
+    var ukuranhuruf = opsi.ukuranhuruf || 1;
+    var tick = "";
+    for (let i = intervalx[0]+1; i < intervalx[1]; i++) {
+        if(i!=0){
+            tick+=String.raw`<line x1="${i}" y1="0"
+            x2="${i}" y2="${3/(rasio*16)}"
+            stroke="black"
+            stroke-width="${1/(rasio*16)}"/>
+            <text x="${i}"  y="${5/(rasio*16)}"  text-anchor="middle" dominant-baseline="hanging" style="font-family:'Times New Roman', Times, serif; font-size:${0.7*ukuranhuruf/(rasio*16)}em">${i}</text>`
+        }
+    }
+    for (let i = -intervaly[1]+1; i < -intervaly[0]; i++) {
+        if(i!=0){
+            tick+=String.raw`<line x1="0" y1="${i}"
+            x2="${-3/(rasio*16)}" y2="${i}"
+            stroke="black"
+            stroke-width="${1/(rasio*16)}"/>
+            <text x="${-5/(rasio*16)}"  y="${i}"  text-anchor="end" dominant-baseline="central" style="font-family:'Times New Roman', Times, serif; font-size:${0.7*ukuranhuruf/(rasio*16)}em">${-i}</text>`
+        }
+    }
+    return String.raw`<svg xmlns='http://www.w3.org/2000/svg' style='max-width: ${(rasio*16)*(lebar)}px; max-height: ${(rasio*16)*(tinggi)}px;' viewbox='${intervalx[0]} ${-intervaly[1]} ${lebar} ${tinggi}'>
+    <defs>
+              <!-- arrowhead marker definition -->
+              <marker
+                id="arrow"
+                viewBox="0 0 10 10"
+                refX="9"
+                refY="5"
+                markerWidth="6"
+                markerHeight="6"
+                orient="auto-start-reverse">
+                <path d="M 0 0 L 10 5 L 0 10 z" />
+              </marker>
+          
+              <!-- simple dot marker definition -->
+              <marker
+                id="dot"
+                viewBox="0 0 10 10"
+                refX="5"
+                refY="5"
+                markerWidth="5"
+                markerHeight="5">
+                <circle cx="5" cy="5" r="5" fill="red" />
+              </marker>
+            </defs>
+          
+            <!-- Coordinate axes with an arrowhead in both directions -->
+            
+    <line x1="${intervalx[0]}" y1="0"
+    x2="${intervalx[1]}" y2="0"
+    stroke="black"
+    stroke-width="${1/(rasio*16)}" marker-end="url(#arrow)"/>
+    <line x1="0" y1="${-intervaly[0]}"
+    x2="0" y2="${-intervaly[1]}"
+    stroke="black"
+    stroke-width="${1/(rasio*16)}" marker-end="url(#arrow)"/>
+    <text x="${intervalx[1]}"  y="${4/(rasio*16)}"  text-anchor="end" dominant-baseline="hanging" style="font-family:'Times New Roman', Times, serif; font-size:${0.8*ukuranhuruf/(rasio*16)}em">&#119883;</text>
+    <text x="${-4/(rasio*16)}"  y="${-intervaly[1]}"  text-anchor="end" dominant-baseline="hanging" style="font-family:'Times New Roman', Times, serif; font-size:${0.8*ukuranhuruf/(rasio*16)}em">&#119884;</text>
+    ${tick}`;
+  }
   function svggaris(garis=[],opsi={}){
     let tbl = opsi.tebalgaris || 1;
     let warna = opsi.warna || "black";
@@ -624,7 +688,8 @@ const pilihacak = (arr, num = 1) => {
     let baseline = opsi.baseline || "auto";
     let xplus = opsi.xplus || 0;
     let yplus = opsi.yplus || 0;
-    return String.raw`<text x="${(garis[0][0]+garis[1][0])/2+xplus}"  y="${(garis[0][1]+garis[1][1])/2+yplus}" text-anchor="${anchor}" dominant-baseline="${baseline}" style="font-family:'Times New Roman', Times, serif; font-size:${ukuran}em">${namalabel}</text>`;
+    let warna = opsi.warna || "black";
+    return String.raw`<text x="${(garis[0][0]+garis[1][0])/2+xplus}"  y="${(garis[0][1]+garis[1][1])/2+yplus}" text-anchor="${anchor}" dominant-baseline="${baseline}" style="font-family:'Times New Roman', Times, serif; font-size:${ukuran}em; fill:${warna}">${namalabel}</text>`;
   }
 
   function svglabeltitik(titik=[0,0],namalabel="A",opsi={}){
@@ -674,7 +739,46 @@ const pilihacak = (arr, num = 1) => {
     let isi = options.isi || "none";
     let warnagaris = options.warnagaris || "black";
     let dash = options.dash || "";
-    let transparanisi = options.transparanisi || 1;
+    let tampakisi = options.tampakisi || 1;
+    let tampakgaris = options.tampakgaris || 1;
     let tebalgaris = options.tebalgaris || 1;
-    return String.raw`<circle cx="${titikpusat[0]}" cy="${titikpusat[1]}" r="${jarijari}" style="stroke:${warnagaris}; stroke-width:${tebalgaris}; stroke-dasharray:${dash}; fill: ${isi}; fill-transparency:${transparanisi}"/>`;
+    return String.raw`<circle cx="${titikpusat[0]}" cy="${titikpusat[1]}" r="${jarijari}" style="stroke:${warnagaris}; stroke-width:${tebalgaris}; stroke-dasharray:${dash}; fill: ${isi}; fill-opacity:${tampakisi}; stroke-opacity:${tampakgaris}"/>`;
+  }
+  function svgkling(titikpusat=[0,0],jarijari=1,options={}){
+    let isi = options.isi || "none";
+    let warnagaris = options.warnagaris || "black";
+    let dash = options.dash || "";
+    let tampakisi = options.tampakisi || 1;
+    let tampakgaris = options.tampakgaris || 1;
+    let tebalgaris = options.tebalgaris || 1;
+    return String.raw`<circle cx="${titikpusat[0]}" cy="${-titikpusat[1]}" r="${jarijari}" style="stroke:${warnagaris}; stroke-width:${tebalgaris/16}; stroke-dasharray:${dash}; fill: ${isi}; fill-opacity:${tampakisi}; stroke-opacity:${tampakgaris}"/>`;
+  }
+  function svgkgaris(garis=[],opsi={}){
+    let tbl = opsi.tebalgaris || 1;
+    let warna = opsi.warna || "black";
+    let dash = opsi.dash || "";
+    return String.raw`<line x1="${garis[0][0]}" y1="${-garis[0][1]}"
+    x2="${garis[1][0]}" y2="${-garis[1][1]}"
+    stroke="${warna}"
+    stroke-width="${tbl/16}" stroke-dasharray="${dash}"/>`
+  }
+  function svgklabeltitik(titik=[0,0],namalabel="A",opsi={}){
+    let ukuran = opsi.ukuran || 0.7;
+    let anchor = opsi.anchor || "start";
+    let baseline = opsi.baseline || "auto";
+    let xplus = opsi.xplus || 0;
+    let yplus = opsi.yplus || 0;
+    let rasio = opsi.rasio || 1;
+    return String.raw`<text x="${titik[0]+xplus/(rasio*16)}"  y="${-titik[1]-yplus/(rasio*16)}" text-anchor="${anchor}" dominant-baseline="${baseline}" style="font-family:'Times New Roman', Times, serif; font-size:${ukuran/(rasio*16)}em">${namalabel}</text>`;
+  }
+  function svgklabelgaris(garis=[],namalabel="A",opsi={}){
+    let ukuran = opsi.ukuran || 1;
+    let anchor = opsi.anchor || "start";
+    let baseline = opsi.baseline || "auto";
+    let xplus = opsi.xplus || 0;
+    let yplus = opsi.yplus || 0;
+    let warna = opsi.warna || "black";
+    let rasio = opsi.rasio || 1;
+    let rotasi = opsi.rotasi || 0;
+    return String.raw`<text x="${(garis[0][0]+garis[1][0])/2+xplus/(rasio*16)}"  y="${-(garis[0][1]+garis[1][1])/2-yplus/(rasio*16)}" text-anchor="${anchor}" dominant-baseline="${baseline}" transform="rotate(${rotasi} ${(garis[0][0]+garis[1][0])/2} ${-(garis[0][1]+garis[1][1])/2})" style="font-family:'Times New Roman', Times, serif; font-size:${ukuran/(rasio*16)}em; fill:${warna}">${namalabel}</text>`;
   }
