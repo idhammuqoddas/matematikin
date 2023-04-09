@@ -509,6 +509,13 @@ function pecahan(pembilang,penyebut){
         return `&minus;${Math.abs(n)}`
       }else{return `${n}`}
   }
+  function tanda4(n=0){
+    if(n==0){
+        return ""
+    }else{
+        return tanda1(n)
+    }
+  }
 
   var min9sampai9tanpa0 = [];
 for(let i=-9;i<10;i++){
@@ -579,14 +586,19 @@ const pilihacak = (arr, num = 1) => {
     return Math.cos(x*Math.PI/180);
   }
 
-   function svgawal(lebar=0,tinggi=0,rasio=1,margin=0){
+  function svgawal(lebar=0,tinggi=0,rasio=1,margin=0){
     return String.raw`<svg xmlns='http://www.w3.org/2000/svg' style='max-width: ${rasio*(lebar+2*margin)}px; max-height: ${rasio*(tinggi+2*margin)}px;' viewbox='${-margin} ${-margin} ${lebar+2*margin} ${tinggi+2*margin}'>`;
   }
-    function svgkoord(intervalx=[0,0],intervaly=[0,0],opsi={}){
+  function svgkoord(intervalx=[0,0],intervaly=[0,0],opsi={}){
     var lebar = Math.abs(intervalx[1]-intervalx[0]);
     var tinggi = Math.abs(intervaly[1]-intervaly[0]);
     var rasio = opsi.rasio || 1;
     var ukuranhuruf = opsi.ukuranhuruf || 1;
+    var wm = opsi.wm || false;
+    var wmteks = opsi.wmteks || "matematikaidhamdaz.blogspot.com";
+    var wmsize = opsi.wmsize || 1;
+    var wmtampak = opsi.wmtampak || 1;
+    var teks = "";
     var tick = "";
     for (let i = intervalx[0]+1; i < intervalx[1]; i++) {
         if(i!=0){
@@ -605,6 +617,9 @@ const pilihacak = (arr, num = 1) => {
             stroke-width="${1/(rasio*16)}"/>
             <text x="${-5/(rasio*16)}"  y="${i}"  text-anchor="end" dominant-baseline="central" style="font-family:'Times New Roman', Times, serif; font-size:${0.7*ukuranhuruf/(rasio*16)}em">${-i}</text>`
         }
+    }
+    if(wm==true){
+        teks = String.raw`<text x="${(intervalx[0]+intervalx[1])/2}"  y="${(intervaly[0]+intervaly[1])/2}"  text-anchor="middle" dominant-baseline="central" fill-opacity="${wmtampak}" transform="rotate(-45 ${(intervalx[0]+intervalx[1])/2} ${(intervaly[0]+intervaly[1])/2})" style="font-family:'Times New Roman', Times, serif; font-size:${0.8*wmsize/(rasio*16)}em">${wmteks}</text>`;
     }
     return String.raw`<svg xmlns='http://www.w3.org/2000/svg' style='max-width: ${(rasio*16)*(lebar)}px; max-height: ${(rasio*16)*(tinggi)}px;' viewbox='${intervalx[0]} ${-intervaly[1]} ${lebar} ${tinggi}'>
     <defs>
@@ -644,6 +659,7 @@ const pilihacak = (arr, num = 1) => {
     stroke-width="${1/(rasio*16)}" marker-end="url(#arrow)"/>
     <text x="${intervalx[1]}"  y="${4/(rasio*16)}"  text-anchor="end" dominant-baseline="hanging" style="font-family:'Times New Roman', Times, serif; font-size:${0.8*ukuranhuruf/(rasio*16)}em">&#119883;</text>
     <text x="${-4/(rasio*16)}"  y="${-intervaly[1]}"  text-anchor="end" dominant-baseline="hanging" style="font-family:'Times New Roman', Times, serif; font-size:${0.8*ukuranhuruf/(rasio*16)}em">&#119884;</text>
+    ${teks}
     ${tick}`;
   }
   function svggaris(garis=[],opsi={}){
@@ -681,6 +697,27 @@ const pilihacak = (arr, num = 1) => {
     let busurbesar = opsi.busurbesar || 0;
     let arah = opsi.arah || 1;
     return String.raw`<path d="M ${arr[1][0]} ${arr[1][1]} L ${arr[1][0]+r*(arr[0][0]-arr[1][0])/panjanggaris([arr[0],arr[1]])} ${arr[1][1]+r*(arr[0][1]-arr[1][1])/panjanggaris([arr[0],arr[1]])} A ${r} ${r} ${rotasi} ${busurbesar} ${arah} ${arr[1][0]+r*(arr[2][0]-arr[1][0])/panjanggaris([arr[2],arr[1]])} ${arr[1][1]+r*(arr[2][1]-arr[1][1])/panjanggaris([arr[2],arr[1]])} z" stroke="${warnagaris}" fill="${isi}" fill-opacity="${tampakisi}" stroke-width="${tebalgaris}" stroke-opacity:"${tampakgaris}"/>`;
+  }
+  function svgsiku(arr=[],opsi={}){
+    let r = opsi.r || 1;
+    let tebalgaris = opsi.tebalgaris || 1;
+    let warnagaris = opsi.warnagaris || "black";
+    let isi = opsi.isi || "none";
+    let tampakisi = opsi.tampakisi || 1;
+    let tampakgaris = opsi.tampakgaris || 1;
+    let ti1x = arr[0][0];
+    let ti1y = arr[0][1];
+    let ti2x = arr[1][0];
+    let ti2y = arr[1][1];
+    let ti3x = arr[2][0];
+    let ti3y = arr[2][1];
+    let pjg1 = panjanggaris([arr[0],arr[1]]);
+    let pjg2 = panjanggaris([arr[2],arr[1]]);
+    let tiawal = [ti2x+r*(ti1x-ti2x)/pjg1,ti2y+r*(ti1y-ti2y)/pjg1];
+    let tiakh = [ti2x+r*(ti3x-ti2x)/pjg2,ti2y+r*(ti3y-ti2y)/pjg2];
+    let titeng = [(tiawal[0]+tiakh[0])/2,(tiawal[1]+tiakh[1])/2];
+    let tilu = [2*titeng[0]-arr[1][0],2*titeng[1]-arr[1][1]]
+    return String.raw`<polygon points="${ti2x},${ti2y} ${tiawal[0]},${tiawal[1]} ${tilu[0]},${tilu[1]} ${arr[1][0]+r*(arr[2][0]-arr[1][0])/panjanggaris([arr[2],arr[1]])},${arr[1][1]+r*(arr[2][1]-arr[1][1])/panjanggaris([arr[2],arr[1]])}" style="stroke:${warnagaris}; stroke-width:${tebalgaris}; fill:${isi}; opacity:${tampakisi}; stroke-opacity:${tampakgaris}"/>`;
   }
   function svglabelgaris(garis=[],namalabel="A",opsi={}){
     let ukuran = opsi.ukuran || 1;
@@ -753,14 +790,28 @@ const pilihacak = (arr, num = 1) => {
     let tebalgaris = options.tebalgaris || 1;
     return String.raw`<circle cx="${titikpusat[0]}" cy="${-titikpusat[1]}" r="${jarijari}" style="stroke:${warnagaris}; stroke-width:${tebalgaris/16}; stroke-dasharray:${dash}; fill: ${isi}; fill-opacity:${tampakisi}; stroke-opacity:${tampakgaris}"/>`;
   }
+  function svgksegi(kumpulantitik=[],opsi={}){
+    let listtitik = `${kumpulantitik[0][0]},${-kumpulantitik[0][1]} `;
+    for (var i = 1; i < kumpulantitik.length; i++) {
+        listtitik += String.raw`${kumpulantitik[i][0]},${-kumpulantitik[i][1]} `;
+      }
+      let warnagaris = opsi.warnagaris || "black";
+      let isi = opsi.isi || "none";
+      let transparanisi = opsi.tampakisi || 1;
+      let tampakgaris = opsi.tampakgaris || 1;
+      let tebalgaris = opsi.tebalgaris || 1;
+      let rasio = opsi.rasio || 1;
+      return String.raw`<polygon points="${listtitik}" style="stroke:${warnagaris}; stroke-width:${tebalgaris/(rasio*16)}; fill:${isi}; opacity:${transparanisi}; stroke-opacity:${tampakgaris}"/>`;
+  }
   function svgkgaris(garis=[],opsi={}){
     let tbl = opsi.tebalgaris || 1;
     let warna = opsi.warna || "black";
     let dash = opsi.dash || "";
+    let rasio = opsi.rasio || 1;
     return String.raw`<line x1="${garis[0][0]}" y1="${-garis[0][1]}"
     x2="${garis[1][0]}" y2="${-garis[1][1]}"
     stroke="${warna}"
-    stroke-width="${tbl/16}" stroke-dasharray="${dash}"/>`
+    stroke-width="${tbl/(rasio*16)}" stroke-dasharray="${dash}"/>`
   }
   function svgklabeltitik(titik=[0,0],namalabel="A",opsi={}){
     let ukuran = opsi.ukuran || 0.7;
@@ -782,3 +833,70 @@ const pilihacak = (arr, num = 1) => {
     let rotasi = opsi.rotasi || 0;
     return String.raw`<text x="${(garis[0][0]+garis[1][0])/2+xplus/(rasio*16)}"  y="${-(garis[0][1]+garis[1][1])/2-yplus/(rasio*16)}" text-anchor="${anchor}" dominant-baseline="${baseline}" transform="rotate(${rotasi} ${(garis[0][0]+garis[1][0])/2} ${-(garis[0][1]+garis[1][1])/2})" style="font-family:'Times New Roman', Times, serif; font-size:${ukuran/(rasio*16)}em; fill:${warna}">${namalabel}</text>`;
   }
+function svgkfungkuad(koef=[],intervalx=[],opsi={}){
+    let a = -koef[0];
+    let b = -koef[1];
+    let c = -koef[2];
+    let x0 = intervalx[0];
+    let y0 = a*x0*x0+b*x0+c;
+    let x2 = intervalx[1];
+    let y2 = a*x2*x2+b*x2+c;
+    let m1 = 2*a*x0+b;
+    let m2 = 2*a*x2+b;
+    let x1 = (-m1*x0 + m2*x2 + y0 - y2)/(m2-m1);
+    let y1 = (-m1*m2*x0 + m1*m2*x2 + m2*y0 - m1*y2)/(m2-m1);
+    let warnagaris = opsi.warnagaris || "black";
+    let isi = opsi.isi || "none";
+    let tampakgaris = opsi.tampakgaris || 1;
+    let tampakisi = opsi.tampakisi || 1;
+    let tebal = opsi.tebalgaris || 1;
+    let rasio = opsi.rasio || 1;
+    return String.raw`<path d="M ${x0} ${y0} Q ${x1} ${y1} ${x2} ${y2}" stroke="${warnagaris}" fill="${isi}" stroke-width="${tebal/(rasio*16)}" stroke-opacity="${tampakgaris}" fill-opacity="${tampakisi}"/>`;
+}
+function svgkkurvaL(f,interval=[],iterasi=1,opsi={}){
+    let x0 = interval[0];
+    let y0 = -f(x0);
+    let xn = interval[1];
+    let xk = [];
+    let yk = [];
+    for (let i = 0; i < iterasi; i++) {
+        xk[i]=x0+(i+1)*(xn-x0)/iterasi;
+        yk[i] = -f(xk[i])
+    }
+    let teksQ = "";
+    for (let i = 0; i < xk.length; i++) {
+        teksQ += ` L ${xk[i]} ${yk[i]}`
+        
+    }
+    let warnagaris = opsi.warnagaris || "black";
+    let isi = opsi.isi || "none";
+    let tampakgaris = opsi.tampakgaris || 1;
+    let tampakisi = opsi.tampakisi || 1;
+    let tebal = opsi.tebalgaris || 1;
+    let rasio = opsi.rasio || 1;
+    return String.raw`<path d="M ${x0} ${y0}${teksQ}" stroke="${warnagaris}" fill="${isi}" stroke-width="${tebal/(rasio*16)}" stroke-opacity="${tampakgaris}" fill-opacity="${tampakisi}"/>`;
+}
+function svgkareakurvaL(f,interval=[],iterasi=1,opsi={}){
+    let x0 = interval[0];
+    let y0 = -f(x0);
+    let xn = interval[1];
+    let xk = [];
+    let yk = [];
+    for (let i = 0; i < iterasi; i++) {
+        xk[i]=x0+(i+1)*(xn-x0)/iterasi;
+        yk[i] = -f(xk[i])
+    }
+    let teksL = "";
+    for (let i = 0; i < xk.length; i++) {
+        teksL += ` L ${xk[i]} ${yk[i]}`
+        
+    }
+    let warnagaris = opsi.warnagaris || "black";
+    let isi = opsi.isi || "black";
+    let tampakgaris = opsi.tampakgaris || 1;
+    let tampakisi = opsi.tampakisi || 1;
+    let tebal = opsi.tebalgaris || 1;
+    let rasio = opsi.rasio || 1;
+    return String.raw`<path d="M ${x0} 0 L ${x0} ${y0}${teksL} L ${xn} 0 z" stroke="${warnagaris}" fill="${isi}" stroke-width="${tebal/(rasio*16)}" stroke-opacity="${tampakgaris}" fill-opacity="${tampakisi}"/>`;
+
+}
