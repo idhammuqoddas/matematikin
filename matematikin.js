@@ -900,3 +900,88 @@ function svgkareakurvaL(f,interval=[],iterasi=1,opsi={}){
     return String.raw`<path d="M ${x0} 0 L ${x0} ${y0}${teksL} L ${xn} 0 z" stroke="${warnagaris}" fill="${isi}" stroke-width="${tebal/(rasio*16)}" stroke-opacity="${tampakgaris}" fill-opacity="${tampakisi}"/>`;
 
 }
+function tipusling3titik(titik1=[],titik2=[],titik3=[]){
+    let x1 = titik1[0];
+    let y1 = titik1[1];
+    let x2 = titik2[0];
+    let y2 = titik2[1];
+    let x3 = titik3[0];
+    let y3 = titik3[1];
+    let a = x2 - x1;
+  let b = y2 - y1;
+  let c = x3 - x2;
+  let d = y3 - y2;
+
+  let e = (a * (x1 + x2)) + (b * (y1 + y2));
+  let f = (c * (x2 + x3)) + (d * (y2 + y3));
+
+  let g = 2 * ((a * (y3 - y2)) - (d * (x2 - x3)));
+
+  if (g === 0) {
+    return null;
+  }
+
+  let centerX = ((d * e) - (b * f)) / g;
+  let centerY = ((a * f) - (c * e)) / g;
+
+  return [centerX, centerY];
+}
+function jariling3titik(titik1=[],titik2=[],titik3=[]){
+    let x1 = titik1[0];
+    let y1 = titik1[1];
+    let x2 = titik2[0];
+    let y2 = titik2[1];
+    let x3 = titik3[0];
+    let y3 = titik3[1];
+    let a = Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
+    let b = Math.sqrt(Math.pow(x3 - x2, 2) + Math.pow(y3 - y2, 2));
+    let c = Math.sqrt(Math.pow(x3 - x1, 2) + Math.pow(y3 - y1, 2));
+    
+    let s = (a + b + c) / 2; // setengah dari keliling segitiga
+    let area = Math.sqrt(s * (s - a) * (s - b) * (s - c)); // luas segitiga menggunakan rumus Heron
+    
+    let radius = (a * b * c) / (4 * area); // rumus jari-jari lingkaran
+    
+    return radius;
+}
+function svgling3titik(kumpulantitik=[],options={}){
+    let titikpusat  = tipusling3titik(kumpulantitik[0],kumpulantitik[1],kumpulantitik[2]);
+    let jarijari = jariling3titik(kumpulantitik[0],kumpulantitik[1],kumpulantitik[2]);
+    let isi = options.isi || "none";
+    let warnagaris = options.warnagaris || "black";
+    let dash = options.dash || "";
+    let tampakisi = options.tampakisi || 1;
+    let tampakgaris = options.tampakgaris || 1;
+    let tebalgaris = options.tebalgaris || 1;
+    return String.raw`<circle cx="${titikpusat[0]}" cy="${titikpusat[1]}" r="${jarijari}" style="stroke:${warnagaris}; stroke-width:${tebalgaris}; stroke-dasharray:${dash}; fill: ${isi}; fill-opacity:${tampakisi}; stroke-opacity:${tampakgaris}"/>`;
+  }
+
+function svgpersegi(duatitik=[],opsi={}){
+    let tiA = duatitik[0];
+    let tiB = duatitik[1];
+    let tiC = [tiA[1]+tiB[0]-tiB[1],-tiA[0]+tiB[0]+tiB[1]];
+    let tiD = [-tiB[1]+tiA[0]+tiA[1],tiB[0]-tiA[0]+tiA[1]];
+    let listtitik = `${tiA[0]},${tiA[1]} ${tiB[0]},${tiB[1]} ${tiC[0]},${tiC[1]} ${tiD[0]},${tiD[1]}`
+    let warnagaris = opsi.warnagaris || "black";
+      let isi = opsi.isi || "none";
+      let transparanisi = opsi.tampakisi || 1;
+      let tampakgaris = opsi.tampakgaris || 1;
+      let tebalgaris = opsi.tebalgaris || 1;
+      let rasio = opsi.rasio || 1;
+      return String.raw`<polygon points="${listtitik}" style="stroke:${warnagaris}; stroke-width:${tebalgaris/(rasio*16)}; fill:${isi}; opacity:${transparanisi}; stroke-opacity:${tampakgaris}"/>`;
+}
+function svgpers1t(satutitik=[],panjang=0,opsi={}){
+    let xA = satutitik[0];
+    let yA = satutitik[1];
+    let tiB = [xA+panjang,yA];
+    let tiC = [xA+panjang,yA+panjang];
+    let tiD = [xA,yA+panjang];
+    let listtitik = `${xA},${yA} ${tiB[0]},${tiB[1]} ${tiC[0]},${tiC[1]} ${tiD[0]},${tiD[1]}`
+    let warnagaris = opsi.warnagaris || "black";
+      let isi = opsi.isi || "none";
+      let transparanisi = opsi.tampakisi || 1;
+      let tampakgaris = opsi.tampakgaris || 1;
+      let tebalgaris = opsi.tebalgaris || 1;
+      let rasio = opsi.rasio || 1;
+      return String.raw`<polygon points="${listtitik}" style="stroke:${warnagaris}; stroke-width:${tebalgaris/(rasio*16)}; fill:${isi}; opacity:${transparanisi}; stroke-opacity:${tampakgaris}"/>`;
+}
