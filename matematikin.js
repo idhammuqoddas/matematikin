@@ -968,7 +968,7 @@ function svgpersegi(duatitik=[],opsi={}){
       let tampakgaris = opsi.tampakgaris || 1;
       let tebalgaris = opsi.tebalgaris || 1;
       let rasio = opsi.rasio || 1;
-      return String.raw`<polygon points="${listtitik}" style="stroke:${warnagaris}; stroke-width:${tebalgaris/(rasio*16)}; fill:${isi}; opacity:${transparanisi}; stroke-opacity:${tampakgaris}"/>`;
+      return String.raw`<polygon points="${listtitik}" style="stroke:${warnagaris}; stroke-width:${tebalgaris}; fill:${isi}; opacity:${transparanisi}; stroke-opacity:${tampakgaris}"/>`;
 }
 function svgpers1t(satutitik=[],panjang=0,opsi={}){
     let xA = satutitik[0];
