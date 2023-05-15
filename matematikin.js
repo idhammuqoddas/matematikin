@@ -985,3 +985,15 @@ function svgpers1t(satutitik=[],panjang=0,opsi={}){
       let rasio = opsi.rasio || 1;
       return String.raw`<polygon points="${listtitik}" style="stroke:${warnagaris}; stroke-width:${tebalgaris/(rasio*16)}; fill:${isi}; opacity:${transparanisi}; stroke-opacity:${tampakgaris}"/>`;
 }
+function titikberat(titik1=[], titik2=[], titik3=[]) {
+    let x1 = titik1[0];
+    let y1 = titik1[1];
+    let x2 = titik2[0];
+    let y2 = titik2[1];
+    let x3 = titik3[0];
+    let y3 = titik3[1];
+    var centroidX = (x1 + x2 + x3) / 3;
+    var centroidY = (y1 + y2 + y3) / 3;
+    
+    return [centroidX, centroidY];
+  }
