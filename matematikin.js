@@ -536,6 +536,8 @@ function kurmin(angka=0){
     return angka
   }else{return `(${angka})`}
 }
+
+//membuat array berisi bilangan bulat dari batasbawah hingga batasatas
 const arraybilbul = (batasbawah=0,batasatas=batasbawah+1) => {
     let hasil = [];
     for (let i = batasbawah; i < batasatas+1; i++) {
@@ -543,6 +545,8 @@ const arraybilbul = (batasbawah=0,batasatas=batasbawah+1) => {
     }
     return hasil
 }
+
+//memilih sebagian elemen dari array arr dan tetap terurut
 function pilihSebagian(arr=[],num=1){
     const res = [];
     let indeks = [];
@@ -560,6 +564,7 @@ function pilihSebagian(arr=[],num=1){
     return res;
 }
 
+//memilih sebagian elemen dari array arr kemudian posisinya diacak
 const pilihacak = (arr, num = 1) => {
     const res = [];
     for(let i = 0; i < num; ){
@@ -572,6 +577,8 @@ const pilihacak = (arr, num = 1) => {
     };
     return res;
  };
+
+ //mengacak urutan elemen pada array
  function acakarray(array) {
     for (let i = array.length - 1; i > 0; i--) {
       let j = Math.floor(Math.random() * (i + 1));
@@ -579,11 +586,49 @@ const pilihacak = (arr, num = 1) => {
     }
   }
 
+  //shortcut untuk Math.sin
   function sin(x=0){
     return Math.sin(x*Math.PI/180);
   }
+
+  //shortcut untuk Math.cos
   function cos(x=0){
     return Math.cos(x*Math.PI/180);
+  }
+
+    //shortcut untuk Math.tan
+    function tan(x=0){
+        return Math.tan(x*Math.PI/180);
+      }
+
+  //membuat tabel dari array
+  function buattabelsoal(arr=[],tempattabel="",opsi={}){
+    let bykbaris = arr.length;
+    let bykkolom = arr[0].length;
+    let teks = String.raw`<table class='w3-table-all tengah'>
+        <thead>
+            <th>NO</th><th>SOAL</th><th>SOLUSI</th>
+        </thead>
+        <tbody>`;
+    for (let i = 0; i < arr.length; i++) {
+        teks += String.raw`<tr><td class="w3-deep-orange" style="font-size: 40px; text-align: left">${i+1}</td><td style="text-align: justify">${arr[i][0]}</td><td><div id="qrc${i}"></div><div style="text-align: center">${arr[i][1]}</div></td></tr>`;
+    };
+    teks += String.raw`</tbody></table>`;
+    document.getElementById(tempattabel).innerHTML = teks;
+    let lebarqr = opsi.lebarqr || 100;
+    let tinggiqr = opsi.tinggiqr || 100;
+    let warnaqr = opsi.warnaqr || "#000000";
+    let qrkode = [];
+    for (let i = 0; i < arr.length; i++) {
+        qrkode[i]=new QRCode("qrc"+i, {
+        text: String.raw`https://n9.cl/${arr[i][1]}`,
+        width: lebarqr,
+        height: tinggiqr,
+        colorDark : warnaqr,
+        colorLight : "#ffffff",
+        correctLevel : QRCode.CorrectLevel.H
+    });
+      }
   }
 
   function svgawal(lebar=0,tinggi=0,rasio=1,margin=0){
@@ -666,10 +711,11 @@ const pilihacak = (arr, num = 1) => {
     let tbl = opsi.tebalgaris || 1;
     let warna = opsi.warna || "black";
     let dash = opsi.dash || "";
+    let tampakgaris = opsi.tampakgaris || 1;
     return String.raw`<line x1="${garis[0][0]}" y1="${garis[0][1]}"
     x2="${garis[1][0]}" y2="${garis[1][1]}"
     stroke="${warna}"
-    stroke-width="${tbl}" stroke-dasharray="${dash}"/>`
+    stroke-width="${tbl}" stroke-dasharray="${dash}" stroke-opacity="${tampakgaris}"/>`
   }
   function svgsegi(kumpulantitik=[],opsi={}){
     let listtitik = `${kumpulantitik[0][0]},${kumpulantitik[0][1]} `;
@@ -985,6 +1031,40 @@ function svgpers1t(satutitik=[],panjang=0,opsi={}){
       let rasio = opsi.rasio || 1;
       return String.raw`<polygon points="${listtitik}" style="stroke:${warnagaris}; stroke-width:${tebalgaris/(rasio*16)}; fill:${isi}; opacity:${transparanisi}; stroke-opacity:${tampakgaris}"/>`;
 }
+
+//kasih garis pendek pada tengah segmen penanda sama panjang
+function tandaSamaPanjang(titikA, titikB, p=1,opsi={}) {
+    let tbl = opsi.tebalgaris || 1;
+    let warna = opsi.warna || "black";
+    let dash = opsi.dash || "";
+    let tampakgaris = opsi.tampakgaris || 1;
+    // Menghitung titik tengah garis AB
+    let midPoint = {x: (titikA[0] + titikB[0]) / 2, y: (titikA[1] + titikB[1]) / 2};
+    // Menghitung gradien garis AB
+    let gradientAB = (titikB[1] - titikA[1]) / (titikB[0] - titikA[0]);
+    let titikC = [];
+    let titikD = []
+    if(gradientAB!=0){
+        // Gradien garis yang tegak lurus dengan garis AB adalah -1 / gradientAB
+    let gradientPerpendicular = -1 / gradientAB;
+    // Menghitung perubahan x dan y berdasarkan panjang p dan gradien
+    let dx = p / Math.sqrt(1 + Math.pow(gradientPerpendicular, 2));
+    let dy = gradientPerpendicular * dx;
+    // Menghitung koordinat titik C dan D
+    titikC = [midPoint.x + dx, midPoint.y + dy];
+    titikD = [midPoint.x - dx, midPoint.y - dy];
+    
+    }
+    if(gradientAB==0){
+    titikC = [midPoint.x,midPoint.y-p/2];
+    titikD = [midPoint.x,midPoint.y+p/2];
+    }
+    return String.raw`<line x1="${titikC[0]}" y1="${titikC[1]}"
+    x2="${titikD[0]}" y2="${titikD[1]}"
+    stroke="${warna}"
+    stroke-width="${tbl}" stroke-dasharray="${dash}" stroke-opacity="${tampakgaris}"/>`
+    }
+
 function titikberat(titik1=[], titik2=[], titik3=[]) {
     let x1 = titik1[0];
     let y1 = titik1[1];
@@ -997,3 +1077,21 @@ function titikberat(titik1=[], titik2=[], titik3=[]) {
     
     return [centroidX, centroidY];
   }
+
+  //kommbinasi n memilih r
+  function komb(n, r) {
+    return Math.round(faktorial(n) / (faktorial(r) * faktorial(n - r)));
+}
+
+//penjabaran faktorial n
+function jabarfakt(n) {
+    let hasil = "";
+    for (let i = n; i > 0; i--) {
+        if (i !== n) {
+            hasil += "\\cdot";
+        }
+        hasil += i;
+    }
+    return hasil;
+}
+ 
