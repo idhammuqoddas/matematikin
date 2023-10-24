@@ -797,8 +797,17 @@ const pilihacak = (arr, num = 1) => {
     let m2 = (y4-y3)/(x4-x3);
     let xtipot = (-m1*x1+m2*x3+y1-y3)/(m2-m1);
     let ytipot = (-m1*m2*x1+m1*m2*x3+m2*y1-m1*y3)/(m2-m1);
+    if(x1==x2){
+        xtipot = x1;
+        ytipot = y3+m2*(xtipot-x3);
+    }    
+    if(x3==x4){
+        xtipot = x3;
+        ytipot = y1+m1*(xtipot-x1);
+    }
     return [xtipot,ytipot]
   }
+
   function titiktengah(garis=[]){
     let xA = garis[0][0];
     let yA = garis[0][1];
