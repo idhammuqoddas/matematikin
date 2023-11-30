@@ -1074,6 +1074,50 @@ function tandaSamaPanjang(titikA, titikB, p=1,opsi={}) {
     stroke-width="${tbl}" stroke-dasharray="${dash}" stroke-opacity="${tampakgaris}"/>`
     }
 
+    function tandaSamaPanjang2(titikA, titikB, p=1,opsi={}) {
+        let tbl = opsi.tebalgaris || 1;
+        let warna = opsi.warna || "black";
+        let dash = opsi.dash || "";
+        let tampakgaris = opsi.tampakgaris || 1;
+        let jarak = opsi.jarak || 1;
+        // Menghitung titik tengah garis AB
+        let midPoint = {x: (titikA[0] + titikB[0]) / 2, y: (titikA[1] + titikB[1]) / 2};
+        let midPoint1 = {x: midPoint.x-(jarak*(titikB[0]-titikA[0]))/panjanggaris([titikA,titikB]), y: midPoint.y-(jarak*(titikB[1]-titikA[1]))/panjanggaris([titikA,titikB])};
+        let midPoint2 = {x: midPoint.x+(jarak*(titikB[0]-titikA[0]))/panjanggaris([titikA,titikB]), y: midPoint.y+(jarak*(titikB[1]-titikA[1]))/panjanggaris([titikA,titikB])};
+        // Menghitung gradien garis AB
+        let gradientAB = (titikB[1] - titikA[1]) / (titikB[0] - titikA[0]);
+        let titikC = [];
+        let titikD = [];
+        let titikE = [];
+        let titikF = [];
+        if(gradientAB!=0){
+            // Gradien garis yang tegak lurus dengan garis AB adalah -1 / gradientAB
+        let gradientPerpendicular = -1 / gradientAB;
+        // Menghitung perubahan x dan y berdasarkan panjang p dan gradien
+        let dx = p / Math.sqrt(1 + Math.pow(gradientPerpendicular, 2));
+        let dy = gradientPerpendicular * dx;
+        // Menghitung koordinat titik C dan D
+        titikC = [midPoint1.x + dx, midPoint1.y + dy];
+        titikD = [midPoint1.x - dx, midPoint1.y - dy];
+        titikE = [midPoint2.x + dx, midPoint2.y + dy];
+        titikF = [midPoint2.x - dx, midPoint2.y - dy];
+        }
+        if(gradientAB==0){
+        titikC = [midPoint1.x,midPoint1.y-p/2];
+        titikD = [midPoint1.x,midPoint1.y+p/2];
+        titikE = [midPoint2.x,midPoint2.y-p/2];
+        titikF = [midPoint2.x,midPoint2.y+p/2];
+        }
+        return String.raw`<line x1="${titikC[0]}" y1="${titikC[1]}"
+        x2="${titikD[0]}" y2="${titikD[1]}"
+        stroke="${warna}"
+        stroke-width="${tbl}" stroke-dasharray="${dash}" stroke-opacity="${tampakgaris}"/>
+        <line x1="${titikE[0]}" y1="${titikE[1]}"
+        x2="${titikF[0]}" y2="${titikF[1]}"
+        stroke="${warna}"
+        stroke-width="${tbl}" stroke-dasharray="${dash}" stroke-opacity="${tampakgaris}"/>`
+        }
+
 function titikberat(titik1=[], titik2=[], titik3=[]) {
     let x1 = titik1[0];
     let y1 = titik1[1];
