@@ -784,6 +784,28 @@ const pilihacak = (arr, num = 1) => {
     return String.raw`<text x="${titik[0]+xplus}"  y="${titik[1]+yplus}" text-anchor="${anchor}" dominant-baseline="${baseline}" style="font-family:'Times New Roman', Times, serif; font-size:${ukuran}em">${namalabel}</text>`;
   }
 
+//setengah lingkaran
+function svgsetling(titikawal=[],titikakhir=[],opsi={}){
+let x1 = titikawal[0];
+let y1 = titikawal[1];
+let x2 = titikakhir[0];
+let y2 = titikakhir[1];
+let r = panjanggaris([titikawal,titikakhir])/2;
+let tebal = opsi.tebal || 1;
+let warnagaris = opsi.warnagaris || "black";
+let isi = opsi.isi || "none";
+let transparanisi = opsi.tampakisi || 1;
+let tampakgaris = opsi.tampakgaris || 1;
+let tutup = opsi.tutup || 0;
+let tekstutup = "";
+if(tutup==1){
+    tekstutup = "z";
+}
+return String.raw`<path d="M ${x1} ${y1}
+A ${r} ${r} 0 0 1 ${x2} ${y2}
+${tekstutup}" stroke="${warnagaris}" fill="${isi}" stroke-width="${tebal}" fill-opacity="${transparanisi}" stroke-opacity="${tampakgaris}"/>`
+}
+
   function titikpotong(garis1=[],garis2=[]){
     let x1 = garis1[0][0];
     let y1 = garis1[0][1];
