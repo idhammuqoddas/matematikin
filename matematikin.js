@@ -1119,6 +1119,21 @@ function tandaSamaPanjang(titikA, titikB, p=1,opsi={}) {
     stroke-width="${tbl}" stroke-dasharray="${dash}" stroke-opacity="${tampakgaris}"/>`
     }
 
+//gradien
+function gradien(garis=[]){
+let titik1 = garis[0];
+let titik2 = garis[1];
+let x1 = titik1[0];
+let y1 = titik1[1];
+let x2 = titik2[0];
+let y2 = titik2[1];
+if(x1==x2){
+    if(y1==y2){
+        return NaN;
+    }else{return Infinity}
+}else{return (y2-y1)/(x2-x1)}
+}
+
     function tandaSamaPanjang2(titikA, titikB, p=1,opsi={}) {
         let tbl = opsi.tebalgaris || 1;
         let warna = opsi.warna || "black";
