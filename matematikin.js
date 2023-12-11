@@ -709,14 +709,37 @@ const pilihacak = (arr, num = 1) => {
   }
   function svggaris(garis=[],opsi={}){
     let tbl = opsi.tebalgaris || 1;
+    let x1 = garis[0][0];
+    let y1 = garis[0][1];
+    let x2 = garis[1][0];
+    let y2 = garis[1][1];
     let warna = opsi.warna || "black";
     let dash = opsi.dash || "";
     let tampakgaris = opsi.tampakgaris || 1;
+    let kepalapanah = opsi.kepalapanah || "";
+    let kodekepala = "";
+    if(kepalapanah!=""){
+        let tebalgariskepala = kepalapanah.tebal || 1;
+        let isi = kepalapanah.isi || warna;
+        let tampakisi = kepalapanah.tampakisi || 1;
+        let lebar = kepalapanah.lebar || 1;
+        let sudut = kepalapanah.sudut || 30;
+        let pjggrs = panjanggaris(garis);
+        let titc = [(lebar*(x1-x2))/pjggrs+x2,(lebar*(y1-y2))/pjggrs+y2];
+        let xc = titc[0];
+        let yc = titc[1];
+        let tinggi = lebar*tan(sudut);
+        let titd = [tinggi*(y1-y2)/pjggrs+xc,tinggi*(x2-x1)/pjggrs+yc]
+        let tite = [tinggi*(y2-y1)/pjggrs+xc,tinggi*(x1-x2)/pjggrs+yc]
+        kodekepala = svgsegi([garis[1],titd,tite],{warnagaris: warna, isi: isi, tampakisi: tampakisi, tebalgaris: tebalgariskepala})
+        //kepalapanah = `url(#${kepalapanah})`
+    }
     return String.raw`<line x1="${garis[0][0]}" y1="${garis[0][1]}"
     x2="${garis[1][0]}" y2="${garis[1][1]}"
     stroke="${warna}"
-    stroke-width="${tbl}" stroke-dasharray="${dash}" stroke-opacity="${tampakgaris}"/>`
+    stroke-width="${tbl}" stroke-dasharray="${dash}" stroke-opacity="${tampakgaris}"/> ${kodekepala}`
   }
+
   function svgsegi(kumpulantitik=[],opsi={}){
     let listtitik = `${kumpulantitik[0][0]},${kumpulantitik[0][1]} `;
     for (var i = 1; i < kumpulantitik.length; i++) {
