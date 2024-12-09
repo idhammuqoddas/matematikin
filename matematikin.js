@@ -353,6 +353,11 @@ function matriksinvers(matriks=[]){
     return hasil
 }
 
+function invMat2(matriks){
+    let dete = det(matriks);
+    return [[fraksi(matriks[1][1],dete),fraksi(-matriks[0][1],dete)],[fraksi(-matriks[1][0],dete),fraksi(matriks[0][0],dete)]]
+}
+
 //Bentuk matriks
 function bentukMatriks(matriks=[]){
     let hasil = String.raw`\begin{pmatrix}`;
@@ -377,6 +382,8 @@ function bentukMatriks(matriks=[]){
     return n.reduce(jumlah2)
   }
 
+  function sumArray(numbers) { return numbers.reduce((accumulator, currentValue) => accumulator + currentValue, 0); }
+  
   function jumlahkuadrat2(a=0,b=0){
       return a*a+b*b
   }
@@ -474,6 +481,27 @@ function pecahan(pembilang,penyebut){
       return pembilang/penyebut
     }else{return String.raw`\dfrac{${pembilang/faktor}}{${penyebut/faktor}}`}
   }
+
+  //membuat teks pecahan akhir
+  function fraksi(pembilang, penyebut) {
+    if (penyebut === 0) {
+        throw new Error("Penyebut tidak boleh nol");
+    }
+    // Menyederhanakan pecahan
+    let fpb_hasil = fpb2(Math.abs(pembilang), Math.abs(penyebut));
+    pembilang /= fpb_hasil;
+    penyebut /= fpb_hasil;
+  
+    // Memeriksa apakah hasilnya bilangan bulat
+    if (penyebut === 1) {
+      return pembilang;
+    }
+  
+    // Membentuk string LaTeX
+    let tanda = pembilang * penyebut < 0 ? "-" : "";
+    return tanda + "\\dfrac{" + Math.abs(pembilang) + "}{" + Math.abs(penyebut) + "}";
+  }
+
   function koef(n=0){
       if(n==1){
           return ""
@@ -498,6 +526,7 @@ function pecahan(pembilang,penyebut){
     }else{return `+ ${n}`}
   }
 
+  //jika n=-1, menjadi - saja. Jika n=1, menjadi tidak ada. Selain itu default
   function tanda3(n=0){
       if(n==-1){
           return `&minus;`;
@@ -509,6 +538,8 @@ function pecahan(pembilang,penyebut){
         return `&minus;${Math.abs(n)}`
       }else{return `${n}`}
   }
+
+  //jika 0, menjadi tidak ada. Selain itu ada
   function tanda4(n=0){
     if(n==0){
         return ""
@@ -523,6 +554,8 @@ for(let i=-9;i<10;i++){
         min9sampai9tanpa0.push(i)
     }
 }
+
+//
 function konst(n){
     if(n==0){
         return "";
@@ -531,6 +564,8 @@ function konst(n){
         return tanda1(n)
     }
 }
+
+//memberikan kurung untuk bilangan negatif
 function kurmin(angka=0){
   if(angka>=0){
     return angka
@@ -630,6 +665,70 @@ const pilihacak = (arr, num = 1) => {
     });
       }
   }
+
+  //Membuat Array bilangan menaik sampai tengah kemudian menurun sampai akhir
+  function buatArr(banyakBilangan, jumlah) {
+    if (banyakBilangan <= 0 || jumlah <= 0) {
+        throw new Error("banyakBilangan dan jumlah harus lebih besar dari 0");
+    }
+
+    let arr = [];
+    let rataRata = Math.floor(jumlah / banyakBilangan);
+    let sisa = jumlah % banyakBilangan;
+
+    // Mengisi array dengan nilai rata-rata
+    for (let i = 0; i < banyakBilangan; i++) {
+        arr.push(rataRata);
+    }
+
+    // Menambahkan sisa secara acak ke elemen-elemen dalam array
+    while (sisa > 0) {
+        let index = Math.floor(Math.random() * banyakBilangan);
+        arr[index]++;
+        sisa--;
+    }
+
+    // Memastikan hanya ada maksimal dua bilangan yang sama
+    let countMap = {};
+    for (let i = 0; i < banyakBilangan; i++) {
+        countMap[arr[i]] = (countMap[arr[i]] || 0) + 1;
+    }
+
+    for (let key in countMap) {
+        while (countMap[key] > 2) {
+            for (let i = 0; i < banyakBilangan; i++) {
+                if (arr[i] == key && countMap[key] > 2) {
+                    arr[i]++;
+                    countMap[key]--;
+                    countMap[arr[i]] = (countMap[arr[i]] || 0) + 1;
+                }
+            }
+        }
+    }
+
+    // Mengurutkan array dan memastikan selisih tidak terlalu jauh
+    arr.sort((a, b) => a - b);
+    for (let i = 1; i < arr.length; i++) {
+        if (arr[i] - arr[i - 1] > 1) {
+            let diff = arr[i] - arr[i - 1] - 1;
+            arr[i] -= diff;
+            arr[i - 1] += diff;
+        }
+    }
+
+    // Mengacak urutan elemen dalam array
+    for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+    }
+
+    return arr;
+}
+  
+//format ribuan, memberikan tanda titik sebagai pemisah ribuan
+function formatRibuan(angka){
+    return angka.toString().replace(/\B(?=(\d{3})+(?!\d))/g,".")
+}
 
   function svgawal(lebar=0,tinggi=0,rasio=1,margin=0){
     return String.raw`<svg xmlns='http://www.w3.org/2000/svg' style='max-width: ${rasio*(lebar+2*margin)}px; max-height: ${rasio*(tinggi+2*margin)}px;' viewbox='${-margin} ${-margin} ${lebar+2*margin} ${tinggi+2*margin}'>`;
@@ -1198,6 +1297,10 @@ function titikberat(titik1=[], titik2=[], titik3=[]) {
     return Math.round(faktorial(n) / (faktorial(r) * faktorial(n - r)));
 }
 
+function C(n,r){
+    return Math.round(faktorial(n) / (faktorial(r) * faktorial(n - r)));
+}
+
 //penjabaran faktorial n
 function jabarfakt(n) {
     let hasil = "";
@@ -1222,11 +1325,17 @@ function kocabuat(idtempatSVG="",intervalSumbuX=[],intervalSumbuY=[],opsi={}){
     let xMax = intervalSumbuX[1];
     let yMin = intervalSumbuY[0];
     let yMax = intervalSumbuY[1];
+    //rasio jarak antar tik
     let rTik = opsi.rTik || 1;
+    //rasio jarak antar tik sumbu x
     let rTikX = opsi.rTikX || rTik;
+    //rasio jarak antar tik sumbu y
     let rTikY = opsi.rTikY || rTik;
+    //Interval di sumbu x
     let intervalX = opsi.intervalX || 1;
+    //interval di sumbu y
     let intervalY = opsi.intervalY || 1;
+    //jarak antar tik real
     let jarakTik = opsi.jarakTik || 30;
     let jarakTikX = opsi.jarakTikX || jarakTik*intervalX;
     let jarakTikY = opsi.jarakTikY || jarakTik*intervalY;
@@ -1258,7 +1367,7 @@ function kocabuat(idtempatSVG="",intervalSumbuX=[],intervalSumbuY=[],opsi={}){
     if(xMax>0){
         banyakTikKanan = Math.floor(xMax/intervalX);
         lebarKanan = (Math.floor(xMax/intervalX)+1)*jarakTikX
-        batasKanan = (banyakTikKanan+1)*intervalX
+        //batasKanan = (banyakTikKanan+1)*intervalX
     }else{lebarKanan = jarakTikX;
     batasKanan = 1};
     let lebar = lebarKiri+lebarKanan;
@@ -1295,6 +1404,10 @@ function kocabuat(idtempatSVG="",intervalSumbuX=[],intervalSumbuY=[],opsi={}){
     }
     let skalaX = lebar/(batasKanan-batasKiri);
     let skalaY = tinggi/(batasAtas-batasBawah);
+    let tepiKiri = -lebarKiri*intervalX/jarakTikX;
+    let tepiKanan = lebarKanan*intervalX/jarakTikX;
+    let tepiBawah = -tinggiBawah*intervalY/jarakTikY;
+    let tepiAtas = tinggiAtas*intervalY/jarakTikY;
     document.getElementById(idtempatSVG).innerHTML = String.raw`<svg xmlns='http://www.w3.org/2000/svg' style='max-width: ${lebar+2*margin}px; max-height: ${tinggi+2*margin}px;' viewbox='${-margin} ${-margin} ${lebar+2*margin} ${tinggi+2*margin}'>
     <g id='${idtempatSVG}_svg'></g>
     ${svggaris([[0,tinggiAtas],[lebar,tinggiAtas]],{kepalapanah: {lebar: 10}})}
@@ -1303,7 +1416,7 @@ function kocabuat(idtempatSVG="",intervalSumbuX=[],intervalSumbuY=[],opsi={}){
     ${svglabeltitik([lebar,tinggiAtas],"X",{anchor: "end", baseline: "hanging",yplus: 8})}
     ${svglabeltitik([lebarKiri,0],"Y",{anchor: "end", baseline: "hanging",xplus: -8})}
     </svg>`
-    return {id: idtempatSVG+'_svg',sumbux: intervalSumbuX, sumbuy: intervalSumbuY,jarakTikX: jarakTikX,jarakTikY: jarakTikY,lebarKiri: lebarKiri, lebarKanan: lebarKanan, lebar: lebar,tinggiBawah: tinggiBawah, tinggiAtas: tinggiAtas,tinggi: tinggi,banyakTikKiri: banyakTikKiri, banyakTikKanan: banyakTikKanan, banyakTikBawah: banyakTikBawah, banyakTikAtas: banyakTikAtas, banyakTikX:banyakTikX, banyakTikY: banyakTikY,margin: margin, intervalX: intervalX, intervalY: intervalY, batasAtas: batasAtas, batasBawah:batasBawah, batasKanan:batasKanan, batasKiri:batasKiri,skalaX:skalaX,skalaY:skalaY}
+    return {id: idtempatSVG+'_svg',sumbux: intervalSumbuX, sumbuy: intervalSumbuY,jarakTikX: jarakTikX,jarakTikY: jarakTikY,lebarKiri: lebarKiri, lebarKanan: lebarKanan, lebar: lebar,tinggiBawah: tinggiBawah, tinggiAtas: tinggiAtas,tinggi: tinggi,banyakTikKiri: banyakTikKiri, banyakTikKanan: banyakTikKanan, banyakTikBawah: banyakTikBawah, banyakTikAtas: banyakTikAtas, banyakTikX:banyakTikX, banyakTikY: banyakTikY,margin: margin, intervalX: intervalX, intervalY: intervalY, batasAtas: batasAtas, batasBawah:batasBawah, batasKanan:batasKanan, batasKiri:batasKiri,skalaX:skalaX,skalaY:skalaY,tepiKiri:tepiKiri,tepiBawah:tepiBawah,tepiKanan:tepiKanan,tepiAtas:tepiAtas}
 }
 
 //koca Segmen
@@ -1316,10 +1429,10 @@ function kocaSegmen(variabelKoca,garis=[],opsi={}){
     let warna = opsi.warna || "black";
     let dash = opsi.dash || "";
     let tampakgaris = opsi.tampakgaris || 1;
-    document.getElementById(variabelKoca.id).innerHTML += String.raw`<line x1="${x1*variabelKoca.skalaX}" y1="${y1*variabelKoca.skalaY}"
-    x2="${x2*variabelKoca.skalaX}" y2="${y2*variabelKoca.skalaY}"
+    document.getElementById(variabelKoca.id).innerHTML += String.raw`<line x1="${variabelKoca.lebarKiri+variabelKoca.jarakTikX*x1/variabelKoca.intervalX}" y1="${variabelKoca.tinggiBawah+variabelKoca.jarakTikY*y1/variabelKoca.intervalY}"
+    x2="${variabelKoca.lebarKiri+variabelKoca.jarakTikX*x2/variabelKoca.intervalX}" y2="${variabelKoca.tinggiBawah+variabelKoca.jarakTikY*y2/variabelKoca.intervalY}"
     stroke="${warna}"
-    stroke-width="${tbl}" stroke-dasharray="${dash}" stroke-opacity="${tampakgaris}" transform="translate(${-variabelKoca.batasKiri*variabelKoca.jarakTikX/variabelKoca.intervalX} ${variabelKoca.batasAtas*variabelKoca.jarakTikY/variabelKoca.intervalY}) scale(1 -1)"/>`
+    stroke-width="${tbl}" stroke-dasharray="${dash}" stroke-opacity="${tampakgaris}" transform="translate(0,${variabelKoca.tinggi}) scale(1,-1)"/>`
     return {titik1: garis[0],titik2: garis[1],panjang: Math.sqrt(Math.pow(x2-x1,2)+Math.pow(y2-y1,2))}
 }
 
@@ -1327,11 +1440,27 @@ function kocaLingkaran(variabelKoca,titikPusat=[],jarijari=0,opsi={}){
     let cx = titikPusat[0];
     let cy = titikPusat[1];
     let tebal = opsi.tebal || 1;
-    let warnaGaris = opsi.warnaGaris || "black";
+    let warnagaris = opsi.warnagaris || "black";
     let isi = opsi.isi || "none";
     let skala = opsi.skala || variabelKoca.lebar/(variabelKoca.batasKanan-variabelKoca.batasKiri);
-    let isikode = String.raw`<ellipse cx="${cx*variabelKoca.skalaX}" cy="${cy*variabelKoca.skalaY}" rx="${jarijari*variabelKoca.skalaX}" fill="${isi}" stroke="${warnaGaris}" ry="${jarijari*variabelKoca.skalaY}" transform="translate(${-variabelKoca.batasKiri*variabelKoca.jarakTikX/variabelKoca.intervalX} ${variabelKoca.batasAtas*variabelKoca.jarakTikY/variabelKoca.intervalY}) scale(1 -1)"  />`;
+    let isikode = String.raw`<ellipse cx="${variabelKoca.lebarKiri+variabelKoca.jarakTikX*cx/variabelKoca.intervalX}" cy="${variabelKoca.tinggiBawah+variabelKoca.jarakTikY*cy/variabelKoca.intervalY}" rx="${variabelKoca.jarakTikX*jarijari/variabelKoca.intervalX}" fill="${isi}" stroke="${warnagaris}" ry="${variabelKoca.jarakTikY*jarijari/variabelKoca.intervalY}" transform="translate(0,${variabelKoca.tinggi}) scale(1,-1)"  />`;
     document.getElementById(variabelKoca.id).innerHTML += isikode;
+}
+
+//koca Segi Banyak
+function kocaSegi(variabelKoca,kumpulantitik=[],opsi={}){
+    let listtitik = `${variabelKoca.lebarKiri+variabelKoca.jarakTikX*kumpulantitik[0][0]/variabelKoca.intervalX},${variabelKoca.tinggiBawah+variabelKoca.jarakTikY*kumpulantitik[0][1]/variabelKoca.intervalY} `;
+    for (var i = 1; i < kumpulantitik.length; i++) {
+        listtitik += String.raw`${variabelKoca.lebarKiri+variabelKoca.jarakTikX*kumpulantitik[i][0]/variabelKoca.intervalX},${variabelKoca.tinggiBawah+variabelKoca.jarakTikY*kumpulantitik[i][1]/variabelKoca.intervalY} `;
+      }
+      let warnagaris = opsi.warnagaris || "black";
+      let isi = opsi.isi || "none";
+      let transparanisi = opsi.tampakisi || 1;
+      let tampakgaris = opsi.tampakgaris || 1;
+      let tebalgaris = opsi.tebalgaris || 1;
+      let join = opsi.join || "miter";
+      document.getElementById(variabelKoca.id).innerHTML += String.raw`<polygon points="${listtitik}" style="stroke:${warnagaris}; stroke-width:${tebalgaris}; fill:${isi}; opacity:${transparanisi}; stroke-opacity:${tampakgaris}; stroke-linejoin:${join}" transform="translate(0,${variabelKoca.tinggi}) scale(1,-1)"/>`;
+      return {kumpulantitik: kumpulantitik}
 }
 
 function dfung(f,x,opsi={}){
@@ -1345,8 +1474,10 @@ function dfung(f,x,opsi={}){
 function kocaGrafung(variabelKoca,f,opsi={}){
     let metode = opsi.metode || 1;
     let iterasi = opsi.iterasi || 100;
-    let xterkecil = opsi.xterkecil || variabelKoca.batasKiri;
-    let xmax = opsi.xmax || variabelKoca.batasKanan;
+    let xterkecil = opsi.xterkecil || variabelKoca.tepiKiri;
+    let xmax = opsi.xmax || variabelKoca.tepiKanan;
+    let tbl = opsi.tebalgaris || 1;
+    let warna = opsi.warna || "black"
     let delta = (xmax-xterkecil)/iterasi;
     let titikfungsi = [];
     let grad = [];
@@ -1371,24 +1502,200 @@ function kocaGrafung(variabelKoca,f,opsi={}){
             c2 = (y1+y2)/2;
         }
         titikKontrol.push([c1,c2])
-        titikKontrol2.push([(c1-variabelKoca.batasKiri)*variabelKoca.skalaX,(-c2+variabelKoca.batasAtas)*variabelKoca.skalaY])
+        titikKontrol2.push([(c1-variabelKoca.batasKiri),(-c2+variabelKoca.batasAtas)])
     }
     let titikfungsi2 = []
     for(let i=0;i<titikfungsi.length;i++){
         let x = titikfungsi[i][0];
         let y = titikfungsi[i][1];
-        titikfungsi2.push([(x-variabelKoca.batasKiri)*variabelKoca.skalaX,(-y+variabelKoca.batasAtas)*variabelKoca.skalaY])
+        titikfungsi2.push([variabelKoca.lebarKiri+variabelKoca.jarakTikX*x/variabelKoca.intervalX,variabelKoca.tinggiBawah+variabelKoca.jarakTikY*y/variabelKoca.intervalY])
     }
-    let kode = String.raw`M ${(xterkecil-variabelKoca.batasKiri)*variabelKoca.skalaX} ${(-f(xterkecil)+variabelKoca.batasAtas)*variabelKoca.skalaY} `;
+    let kode = String.raw`M ${variabelKoca.lebarKiri+variabelKoca.jarakTikX*xterkecil/variabelKoca.intervalX} ${variabelKoca.tinggiBawah+variabelKoca.jarakTikY*f(xterkecil)/variabelKoca.intervalY} `;
     let kode0 = kode;
     for(let i=0;i<iterasi;i++){
         kode+=String.raw`Q ${titikKontrol2[i][0]} ${titikKontrol2[i][1]} ${titikfungsi2[i+1][0]} ${titikfungsi2[i+1][1]}`;
         kode0+=String.raw`L ${titikfungsi2[i+1][0]} ${titikfungsi2[i+1][1]} `;
     }
-    if(metode==2){document.getElementById(variabelKoca.id).innerHTML += String.raw` <path d="${kode}" stroke="black" fill="transparent"/>`}
+    if(metode==2){document.getElementById(variabelKoca.id).innerHTML += String.raw` <path d="${kode}" stroke="${warna}" fill="transparent" stroke-width="${tbl}" transform="translate(${-variabelKoca.batasKiri*variabelKoca.jarakTikX/variabelKoca.intervalX} ${variabelKoca.batasAtas*variabelKoca.jarakTikY/variabelKoca.intervalY}) scale(1 -1)"/>`}
     else if(metode==1){
-        document.getElementById(variabelKoca.id).innerHTML += String.raw` <path d="${kode0}" stroke="black" fill="transparent"/>`
+        document.getElementById(variabelKoca.id).innerHTML += String.raw` <path d="${kode0}" stroke="${warna}" fill="transparent" stroke-width="${tbl}"  transform="translate(0,${variabelKoca.tinggi}) scale(1,-1)"/>`
     }
     
     return {titikfungsi: titikfungsi,xmin:xterkecil,xmax:xmax,grad:grad,titikKontrol:titikKontrol,titikfungsi2:titikfungsi2,delta:delta,titikKontrol2:titikKontrol2,metode:metode}
 }
+
+//koca label titik
+function kocaLabelTitik(variabelKoca,titik=[],namalabel="",opsi={}){
+    let ukuran = opsi.ukuran || 1;
+    let anchor = opsi.anchor || "start";
+    let baseline = opsi.baseline || "auto";
+    let xplus = opsi.xplus || 0;
+    let yplus = opsi.yplus || 0;
+    let font = opsi.font || `'Times New Roman', Times, serif`
+    document.getElementById(variabelKoca.id).innerHTML += String.raw`<text x="${variabelKoca.lebarKiri+variabelKoca.jarakTikX*(titik[0]+xplus)/variabelKoca.intervalX}"  y="${variabelKoca.tinggi+-(variabelKoca.tinggiBawah+variabelKoca.jarakTikY*(titik[1]+yplus)/variabelKoca.intervalY)}" text-anchor="${anchor}" dominant-baseline="${baseline}" style="font-family:${font}; font-size:${ukuran}em">${namalabel}</text>`;
+    return {titik:titik,label:namalabel,ukuran:ukuran,font:font}
+}
+
+function geomBuat(id="",lebar=0,tinggi=0,opsi={}){
+    let rasio = opsi.rasio || 1;
+    let margin = opsi.margin || 0;
+    document.getElementById(id).innerHTML = String.raw`<svg id="${id}_svg" xmlns='http://www.w3.org/2000/svg' style='max-width: ${rasio*(lebar+2*margin)}px; max-height: ${rasio*(tinggi+2*margin)}px;' viewbox='${-rasio*margin} ${-rasio*margin} ${rasio*(lebar+2*margin)} ${rasio*(tinggi+2*margin)}'></svg>`;
+    return {id:id,lebar:lebar,tinggi:tinggi,rasio:rasio,margin:margin}
+}
+
+function geomSegmen(variabelGeom,kumTitik,opsi={}){
+    let titik1 = kumTitik[0];
+    let titik2 = kumTitik[1];
+    let x1 = titik1[0];
+    let y1 = titik1[1];
+    let x2 = titik2[0];
+    let y2 = titik2[1];
+    let warna = opsi.warna || "black";
+    let tbl = opsi.tebal || 1;
+    let dash = opsi.dash || "";
+    let tampakgaris = opsi.tampak || 1;
+    document.getElementById(variabelGeom.id+"_svg").innerHTML += String.raw`<line x1="${x1*variabelGeom.rasio}" y1="${y1*variabelGeom.rasio}"
+    x2="${x2*variabelGeom.rasio}" y2="${y2*variabelGeom.rasio}"
+    stroke="${warna}"
+    stroke-width="${tbl}" stroke-dasharray="${dash}" stroke-opacity="${tampakgaris}"/>`;
+    return {kumTitik:kumTitik,warna:warna,tebal:tbl}
+}
+
+function geomSegi(variabelGeom,kumTitik,opsi={}){
+    let listtitik = `${kumTitik[0][0]*variabelGeom.rasio},${kumTitik[0][1]*variabelGeom.rasio} `;
+    for (var i = 1; i < kumTitik.length; i++) {
+        listtitik += String.raw`${kumTitik[i][0]*variabelGeom.rasio},${kumTitik[i][1]*variabelGeom.rasio} `;
+      }
+      let warnagaris = opsi.warnagaris || "black";
+      let isi = opsi.isi || "none";
+      let transparanisi = opsi.tampakisi || 1;
+      let tampakgaris = opsi.tampakgaris || 1;
+      let tebalgaris = opsi.tebalgaris || 1;
+      let join = opsi.join || "miter";
+    document.getElementById(variabelGeom.id+"_svg").innerHTML += String.raw`<polygon points="${listtitik}" style="stroke:${warnagaris}; stroke-width:${tebalgaris}; fill:${isi}; opacity:${transparanisi}; stroke-opacity:${tampakgaris}; stroke-linejoin:${join}"/>`;
+    return {kumTitik:kumTitik,warnagaris:warnagaris,isi:isi,tampakisi:transparanisi,tampakgaris:tampakgaris,tebalgaris:tebalgaris,join:join}
+}
+
+function geomLing(variabelGeom,titikPusat=[],jarijari=0,opsi={}){
+    let xp = titikPusat[0];
+    let yp = titikPusat[1];
+    let warnagaris = opsi.warnagaris || "black";
+    let tebalgaris = opsi.tebalgaris || 1;
+    let isi = opsi.isi || "none";
+    let transparanisi = opsi.tampakisi || 1;
+    let tampakgaris = opsi.tampakgaris || 1;
+    document.getElementById(variabelGeom.id+"_svg").innerHTML += String.raw`<circle r="${jarijari*variabelGeom.rasio}" cx="${xp*variabelGeom.rasio}" cy="${yp*variabelGeom.rasio}" style="stroke:${warnagaris}; stroke-width:${tebalgaris}; fill:${isi}; opacity:${transparanisi}; stroke-opacity:${tampakgaris};"/>`;
+    return {titikPusat:titikPusat,jarijari:jarijari}
+}
+
+function geomBusur(variabelGeom,titikPusat=[],titikAwal=[],titikAkhir=[],opsi={}){
+    let xp = titikPusat[0];
+    let yp = titikPusat[1];
+    let x1 = titikAwal[0];
+    let y1 = titikAwal[1];
+    let radius = Math.sqrt(Math.pow(x1-xp,2)+Math.pow(y1-yp,2));
+    let x2 = titikAkhir[0];
+    let y2 = titikAkhir[1];
+    let busurbesar = opsi.busurbesar || 0;
+    let arahrotasi = opsi.arahrotasi || 0;
+    let tertutup = opsi.tertutup || 0;
+    let sweep = opsi.sweep || 0;
+    let kodeTutup = "";
+    if(tertutup){
+        kodeTutup = "Z"
+    }
+    let warnagaris = opsi.warnagaris || "black";
+    let tebalgaris = opsi.tebalgaris || 1;
+    let isi = opsi.isi || "none";
+    let transparanisi = opsi.tampakisi || 1;
+    let tampakgaris = opsi.tampakgaris || 1;
+    let join = opsi.join || "mitter";
+    let isid = `M ${x1*variabelGeom.rasio} ${y1*variabelGeom.rasio} A ${radius*variabelGeom.rasio} ${radius*variabelGeom.rasio} ${arahrotasi} ${busurbesar} ${sweep} ${x2*variabelGeom.rasio} ${y2*variabelGeom.rasio} ${kodeTutup}`;
+    document.getElementById(variabelGeom.id+"_svg").innerHTML += String.raw`<path d="${isid}" style="stroke:${warnagaris}; stroke-width:${tebalgaris}; fill:${isi}; opacity:${transparanisi}; stroke-opacity:${tampakgaris}; stroke-linejoin:${join}"/>`;
+    return {titikPusat:titikPusat,titikAwal:titikAwal,titikAkhir:titikAkhir,r:radius}
+}
+
+function geomSetengahLing(variabelGeom,titikPusat=[],titikAwal=[],opsi={}){
+    let xp = titikPusat[0];
+    let yp = titikPusat[1];
+    let x1 = titikAwal[0];
+    let y1 = titikAwal[1];
+    let radius = Math.sqrt(Math.pow(x1-xp,2)+Math.pow(y1-yp,2));
+    let x2 = 2*xp-x1;
+    let y2 = 2*yp-y1;
+    let busurbesar = opsi.busurbesar || 1;
+    let arahrotasi = opsi.arahrotasi || 1;
+    let tertutup = opsi.tertutup || 0;
+    let sweep = opsi.sweep || 1;
+    let kodeTutup = "";
+    if(tertutup){
+        kodeTutup = "Z"
+    }
+    let warnagaris = opsi.warnagaris || "black";
+    let tebalgaris = opsi.tebalgaris || 1;
+    let isi = opsi.isi || "none";
+    let transparanisi = opsi.tampakisi || 1;
+    let tampakgaris = opsi.tampakgaris || 1;
+    let join = opsi.join || "mitter";
+    let isid = `M ${x1*variabelGeom.rasio} ${y1*variabelGeom.rasio} A ${radius*variabelGeom.rasio} ${radius*variabelGeom.rasio} ${arahrotasi} ${busurbesar} ${sweep} ${x2*variabelGeom.rasio} ${y2*variabelGeom.rasio} ${kodeTutup}`;
+    document.getElementById(variabelGeom.id+"_svg").innerHTML += String.raw`<path d="${isid}" style="stroke:${warnagaris}; stroke-width:${tebalgaris}; fill:${isi}; opacity:${transparanisi}; stroke-opacity:${tampakgaris}; stroke-linejoin:${join}"/>`;
+    return {titikPusat:titikPusat,r:radius}
+}
+
+function geomLabelTitik(variabelGeom,titik=[0,0],label="",opsi={}){
+    let ukuran = opsi.ukuran || 1;
+    let anchor = opsi.anchor || "start";
+    let baseline = opsi.baseline || "auto";
+    let xplus = opsi.xplus || 0;
+    let yplus = opsi.yplus || 0;
+    let warna = opsi.warna || "black"
+    document.getElementById(variabelGeom.id+"_svg").innerHTML += String.raw`<text x="${variabelGeom.rasio*(titik[0]+xplus)}"  y="${variabelGeom.rasio*(titik[1]+yplus)}" text-anchor="${anchor}" dominant-baseline="${baseline}" style="font-family:'Times New Roman', Times, serif; font-size:${ukuran}em; fill:${warna}">${label}</text>`;
+    return {titik:titik,label:label,ukuran:ukuran,warna:warna}
+}
+
+function geomLabelGaris(variabelGeom,kumTitik,label="",opsi={}){
+    let ukuran = opsi.ukuran || 1;
+    let anchor = opsi.anchor || "start";
+    let baseline = opsi.baseline || "auto";
+    let xplus = opsi.xplus || 0;
+    let yplus = opsi.yplus || 0;
+    let warna = opsi.warna || "black";
+    document.getElementById(variabelGeom.id+"_svg").innerHTML += String.raw`<text x="${variabelGeom.rasio*((kumTitik[0][0]+kumTitik[1][0])/2+xplus)}"  y="${variabelGeom.rasio*((kumTitik[0][1]+kumTitik[1][1])/2+yplus)}" text-anchor="${anchor}" dominant-baseline="${baseline}" style="font-family:'Times New Roman', Times, serif; font-size:${ukuran}em; fill:${warna}">${label}</text>`;
+    return {kumTitik:kumTitik,label:label}
+}
+
+function geomSudut(variabelGeom,kumTitik,opsi={}){
+    let r = opsi.r || 1;
+    let tebalgaris = opsi.tebalgaris || 1;
+    let warnagaris = opsi.warnagaris || "black";
+    let isi = opsi.isi || "none";
+    let tampakisi = opsi.tampakisi || 1;
+    let tampakgaris = opsi.tampakgaris || 1;
+    let rotasi = opsi.rotasi || 0;
+    let busurbesar = opsi.busurbesar || 0;
+    let arah = opsi.arah || 1;
+    document.getElementById(variabelGeom.id+"_svg").innerHTML += String.raw`<path d="M ${variabelGeom.rasio*kumTitik[1][0]} ${variabelGeom.rasio*kumTitik[1][1]} L ${variabelGeom.rasio*(kumTitik[1][0]+r*(kumTitik[0][0]-kumTitik[1][0])/panjanggaris([kumTitik[0],kumTitik[1]]))} ${variabelGeom.rasio*(kumTitik[1][1]+r*(kumTitik[0][1]-kumTitik[1][1])/panjanggaris([kumTitik[0],kumTitik[1]]))} A ${variabelGeom.rasio*r} ${variabelGeom.rasio*r} ${rotasi} ${busurbesar} ${arah} ${variabelGeom.rasio*(kumTitik[1][0]+r*(kumTitik[2][0]-kumTitik[1][0])/panjanggaris([kumTitik[2],kumTitik[1]]))} ${variabelGeom.rasio*(kumTitik[1][1]+r*(kumTitik[2][1]-kumTitik[1][1])/panjanggaris([kumTitik[2],kumTitik[1]]))} z" stroke="${warnagaris}" fill="${isi}" fill-opacity="${tampakisi}" stroke-width="${tebalgaris}" stroke-opacity="${tampakgaris}"/>`;
+    return {kumTitik:kumTitik,r:r,warnagaris:warnagaris,tebalgaris:tebalgaris,isi:isi,tampakisi:tampakisi,tampakgaris:tampakgaris,rotasi,rotasi,busurbesar:busurbesar,arah:arah}
+}
+
+function geomSiku(variabelGeom,kumTitik=[],opsi={}){
+    let r = opsi.r || 1;
+    let tebalgaris = opsi.tebalgaris || 1;
+    let warnagaris = opsi.warnagaris || "black";
+    let isi = opsi.isi || "none";
+    let tampakisi = opsi.tampakisi || 1;
+    let tampakgaris = opsi.tampakgaris || 1;
+    let ti1x = kumTitik[0][0];
+    let ti1y = kumTitik[0][1];
+    let ti2x = kumTitik[1][0];
+    let ti2y = kumTitik[1][1];
+    let ti3x = kumTitik[2][0];
+    let ti3y = kumTitik[2][1];
+    let pjg1 = panjanggaris([kumTitik[0],kumTitik[1]]);
+    let pjg2 = panjanggaris([kumTitik[2],kumTitik[1]]);
+    let tiawal = [ti2x+r*(ti1x-ti2x)/pjg1,ti2y+r*(ti1y-ti2y)/pjg1];
+    let tiakh = [ti2x+r*(ti3x-ti2x)/pjg2,ti2y+r*(ti3y-ti2y)/pjg2];
+    let titeng = [(tiawal[0]+tiakh[0])/2,(tiawal[1]+tiakh[1])/2];
+    let tilu = [2*titeng[0]-kumTitik[1][0],2*titeng[1]-kumTitik[1][1]]
+    document.getElementById(variabelGeom.id+"_svg").innerHTML += String.raw`<polygon points="${variabelGeom.rasio*ti2x},${variabelGeom.rasio*ti2y} ${variabelGeom.rasio*tiawal[0]},${variabelGeom.rasio*tiawal[1]} ${variabelGeom.rasio*tilu[0]},${variabelGeom.rasio*tilu[1]} ${variabelGeom.rasio*(kumTitik[1][0]+r*(kumTitik[2][0]-kumTitik[1][0])/panjanggaris([kumTitik[2],kumTitik[1]]))},${variabelGeom.rasio*(kumTitik[1][1]+r*(kumTitik[2][1]-kumTitik[1][1])/panjanggaris([kumTitik[2],kumTitik[1]]))}" style="stroke:${warnagaris}; stroke-width:${tebalgaris}; fill:${isi}; opacity:${tampakisi}; stroke-opacity:${tampakgaris}"/>`;
+  }
