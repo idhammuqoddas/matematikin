@@ -1567,7 +1567,7 @@ function geomSegmen(variabelGeom,kumTitik,opsi={}){
     let x2 = titik2[0];
     let y2 = titik2[1];
     const { warna = "black", tebal = 1, dash = "", tampak = 1 } = opsi;
-    appendToSVG(geom, `
+    appendToSVG(variabelGeom, `
         <line x1="${p1[0] * variabelGeom.rasio}" y1="${p1[1] * variabelGeom.rasio}" 
               x2="${p2[0] * variabelGeom.rasio}" y2="${p2[1] * variabelGeom.rasio}" 
               stroke="${warna}" stroke-width="${tebal}" 
@@ -1579,7 +1579,7 @@ function geomSegmen(variabelGeom,kumTitik,opsi={}){
 function geomSegi(variabelGeom,kumTitik,opsi={}){
     const listtitik = kumTitik.map(p => `${p[0] * variabelGeom.rasio},${p[1] * variabelGeom.rasio}`).join(" ");
     const { warnaGaris = "black", isi = "none", tampakIsi = 1, tampakGaris = 1, tebal = 1, join = "miter" } = opsi;
-    appendToSVG(geom, `
+    appendToSVG(variabelGeom, `
         <polygon points="${listtitik}" style="stroke:${warnaGaris}; stroke-width:${tebal};
             fill:${isi}; opacity:${tampakIsi}; stroke-opacity:${tampakGaris}; stroke-linejoin:${join}"/>
     `);
