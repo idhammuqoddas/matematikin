@@ -1,0 +1,767 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]>      <html class="no-js"> <!--<![endif]-->
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Exercise Zone : Fungsi Kuadrat</title> 
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/5/w3.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Rubik" rel="stylesheet">
+
+    <script>MathJax={
+   loader: {load: ['[tex]/color','[tex]/cancel','[tex]/enclose']},
+   tex: {
+      inlineMath: [['$', '$'],['\\(','\\)']],
+      packages: {'[+]': ['color','cancel','enclose']},
+      macros: {
+         degree: "{^\\circ}",
+         dmn: "\\ \\middle\\vert\\ "
+      }
+   },
+   options:{
+      skipHtmlTags: ["script","noscript","style","textarea","pre","code"]
+   }
+};
+
+function isinomor(awal){
+  let soalke = document.getElementsByClassName("nomor");
+  for(let i=0;i<soalke.length;i++){
+     soalke[i].innerHTML = awal+i;
+  }
+}
+var persi = 2;
+function lingtri(){
+   window.open("https://idham.skom.id/idham/linktreematematikaidhamdaz.html?v=3","_blank");
+  }
+//nama class untuk tipe
+var idtipe=["standar","snbt","hots"];
+
+//fungsi kuadrat
+var fungkuad = [["/2022/11/exercise-zone-fungsi-kuadrat.html","/2024/03/exercise-zone-fungsi-kuadrat-2.html"],[],["/2023/04/hots-zone-fungsi-kuadrat.html"]];
+//fungsi soal untuk mengatur tipe dan navigasi. materi diisi dengan nama variabel sesuai dengan materi yang diinginkan di atas. tipesoal diisi 1 untuk tipe standar, 2 untuk tipe sbmptn, dan 3 untuk tipe hots. halaman diisi angka sesuai halaman ke berapa
+function soal(materi, tipesoal, halaman)  {
+     for (let i = 0; i < 3; i++) {
+        if (materi[i].length > 0) {
+          document.getElementById(idtipe[i]).classList.replace("w3-hide", "w3-show");
+           document.getElementById(idtipe[i]).setAttribute("href", materi[i][0]);
+        }
+     }
+     var navi = document.getElementsByClassName("navi");
+     if (materi[tipesoal - 1].length > 1) {
+        for (let i = 0; i < navi.length; i++) {
+           navi[i].classList.replace("w3-hide", "w3-show");
+           for (let j = 0; j < materi[tipesoal - 1].length; j++) {
+               navi[i].innerHTML += `<a href="${materi[tipesoal - 1][j]}" class="w3-bar-item w3-button">${(j + 1)}</a>`;
+           }
+           navi[i].getElementsByTagName("a")[halaman - 1].removeAttribute("href");
+           navi[i].getElementsByTagName("a")[halaman - 1].classList.add("w3-green");
+        }
+     }
+     isinomor((halaman - 1) * 10 + 1);
+     
+  }
+
+
+function isihtml(elementId, html) {
+   var element = document.getElementById(elementId);
+   if (element) {
+     element.innerHTML = html;
+   }
+ }
+ 
+ //mengganti stringAwal dengan stringPengganti pada div dengan id divId
+ function gantiString(divId, stringAwal, stringPengganti) {
+   var div = document.getElementById(divId);
+   if (div) {
+       div.innerHTML = div.innerHTML.replace(new RegExp(stringAwal, 'g'), stringPengganti);
+   } else {
+       console.log("Tidak ada elemen dengan ID: " + divId);
+   }
+}</script>
+    <script src="https://idhammuqoddas.github.io/matematikin/matematikin.js"></script>
+<!--link rel="stylesheet" href="style.css"-->
+<style>body{
+font-family: roboto,sans-serif;   
+}
+table.tengah td,table.tengah th{
+text-align: center;
+}
+.pas2{
+	padding-top: 0.5em;
+}
+
+table.noborder td{
+border: 0;
+}
+table.nwr td,th{
+ white-space: nowrap;
+}
+table.borsemua td{
+  border: 1px solid black;
+}
+.flo{
+overflow-x:auto;
+overflow-y: hidden;
+}
+table.jarak td{
+padding-right: 1em;
+}
+a.disabled {
+   pointer-events: none;
+   cursor: default;
+}
+.tip{
+    text-decoration-line: underline;
+    text-decoration-style: dotted;
+    position: relative;
+}
+.tip::before{
+  content: attr(teks);
+  position: absolute;
+  transform: translateX(-97%);
+  bottom: 50%;
+  margin-bottom: 15px;
+  width:50em;
+  padding:10px;
+  border-radius:10px;
+  background:#000;
+  color: #fff;
+  text-align:center;
+  display: none;
+}
+.tip:hover::before{
+  display: block;
+}
+.text-justify{
+    text-align: justify;
+}
+table.foot{
+    margin-bottom: -0.5rem;
+}
+.thumb{
+    clear: both;
+  }
+  .tipesoal{
+    margin-left:0em
+  }
+  .pagi{
+    margin-left:0em
+  }
+  .tebal{
+    font-weight: bold;
+  }
+  .peny{
+    font-weight: bold;
+    font-size: large;
+  }
+  details {
+width: 100%;
+margin: 0 auto ;
+margin-bottom: .5rem;
+box-shadow: 0 .1rem 1rem -.5rem rgba(0,0,0,.4);
+border-radius: 5px;
+overflow: hidden;
+}
+
+summary {
+    padding: .3rem;
+    display: block;
+    background: #E6DCDB;
+    padding-left: 2.2rem;
+    position: relative;
+    cursor: pointer;
+}
+
+summary:before {
+content: '';
+border-width: .4rem;
+border-style: solid;
+border-color: transparent transparent transparent rgb(153, 0, 0);
+position: absolute;
+top: .6rem;
+left: 1rem;
+transform: rotate(0);
+transform-origin: .2rem 50%;
+transition: .25s transform ease;
+}
+
+/* THE MAGIC 🧙‍♀️ */
+details[open] > summary:before {
+transform: rotate(90deg);
+}
+
+
+details summary::-webkit-details-marker {
+display:none;
+}
+details > ul {
+padding-bottom: .4rem;
+margin-bottom: 0;
+}
+th{
+  background-color:darkolivegreen;
+  color: aliceblue;
+}
+body{
+  font-family: "Montserrat";
+  font-weight: 600;
+}
+.bq{
+    margin-top: 5px;
+    margin-bottom: 5px;
+    font-style: italic;
+    margin-left: 100px;
+}
+details{
+    padding-top: .5em;
+}
+em{
+  font-family: Cambria, Times, Cochin, Georgia, 'Times New Roman', serif;
+  font-size: 1.1em;
+}
+.w3-bar{
+  width: -moz-fit-content;
+  width: fit-content;
+}
+.pb{
+  padding-bottom: 1em;
+  padding-left: -2em;
+}
+.justify{
+  text-align: justify;
+}
+div.tengah{
+  text-align: center;
+}
+@media only screen and (max-width: 600px) {
+  .hape{
+    display: block;
+  }
+  .gede{
+    display: none;
+  }
+}
+@media only screen and (min-width: 600px) {
+  .hape{
+    display: none;
+  }
+  .gede{
+    display: block;
+  }
+}
+e{
+  white-space: nowrap;
+}
+box{
+  border: 4px double black;
+  padding: 2px 1.5px;
+}
+te{
+  text-align: center;
+  display: block;
+}
+.judulcontoh{
+  font-size: 1.3em;
+  color: crimson;
+  border-bottom: 1px solid crimson;
+}
+.rumus {
+  padding: 5px;
+  background-color: aliceblue;
+  border-radius: 10px;
+}
+@media print{
+  .bukti{
+    display: none !important;
+  }
+}
+.duakol{
+  column-count: 2;
+      column-gap: 20px;
+      break-inside: avoid;
+}
+.tengah{
+  text-align: center;
+}
+table.nw th,table.nw td{
+  white-space: nowrap;
+}
+.opsi5kol{
+  column-count: 5;
+}
+kotak{
+  border: 1px solid blue;
+  padding: 2px;
+  margin: 1px;
+}
+</style>
+</head>
+
+<body>
+	<!--[if lt IE 7]>
+      <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="#">upgrade your browser</a> to improve your experience.</p>
+    <![endif]--><br>
+
+<div class="w3-container" style="background-color: papayawhip">
+  Berikut ini adalah kumpulan soal mengenai <span id="namamateri">Fungsi Kuadrat</span>. Jika ingin bertanya soal, silahkan gabung ke grup <a href="https://t.me/matematikazoneid" target="_blank" rel="noopener noreferrer">Telegram</a>, <a href="https://signal.group/#CjQKIK3WGrk9hYWH9FFG9ZTP_usQh_pP0kBjhnILPYjzOqW5EhD9kUYjSpwF-j1iPncINowY" target="_blank" rel="noopener noreferrer">Signal</a>, <a href="https://discord.gg/znehknXkx8" target="_blank" rel="noopener noreferrer">Discord</a>, atau <a href="https://chat.whatsapp.com/HIUpnicy1VA0lrtkiARqRd" target="_blank" rel="noopener noreferrer">WhatsApp</a>.<span><!--more--></span>
+
+  <h3>Tipe: </h3>
+  <div class="w3-bar w3-border w3-round"><span id="standar" class="w3-bar-item w3-deep-purple w3-hide">Standar</span><a href="http://" target="_blank" rel="noopener noreferrer" id="snbt" class="w3-bar-item w3-button w3-hide">SNBT</a><a href="http://" target="_blank" rel="noopener noreferrer" id="hots" class="w3-bar-item w3-button w3-hide">HOTS</a></div>
+  <div class="navi w3-bar w3-border w3-round w3-hide">
+  </div>
+
+  <div id="1" class="justify">
+    <h3>No. <span class="w3-badge w3-red nomor"></span></h3>
+    Persamaan grafik fungsi kuadrat yang memiliki koordinat titik balik <e><em>P</em>(&minus;2,4)</e> dan melalui titik <e><em>A</em>(&minus;3,1)</e> adalah ....
+  <div class="w3-row">
+<div class="w3-col s6">
+<ol class="pas1" type="A">
+<li><e><em>y</em> = &minus;3(<em>x</em> + 2)<sup>2</sup> + 4</e></li>
+<li><e><em>y</em> = &minus;2(<em>x</em> + 2)<sup>2</sup> + 4</e>
+</li>
+<li><e><em>y</em> = (<em>x</em> + 2)<sup>2</sup> + 4</e>
+</li>
+</ol>
+</div>
+<div class="w3-col s6">
+<ol class="pas1" start="4" type="A">
+<li><e><em>y</em> = 2(<em>x</em> + 2)<sup>2</sup> + 4</e></li>
+<li><e><em>y</em> = 3(<em>x</em> + 2)<sup>2</sup> + 4</e>
+</li>
+</ol>
+</div>
+</div>
+    <div class="bq w3-right w3-panel w3-leftbar w3-light-grey w3-cursive"><a href="https://s.id/matematikaidhamdaz" target="_blank" rel="noopener noreferrer">Matematika Zone Indonesia</a></div>
+    <details>
+      <summary class="peny">ALTERNATIF PENYELESAIAN</summary>
+      <div class="w3-card-4">
+        <div class="w3-padding w3-sand flo"><div class="w3-row">
+          <div class="w3-col l6">Titik balik <e>(&minus;2, 4)</e><br />
+            \(\eqalign{
+            y&amp;=a\left(x-x_p\right)^2+y_p\\
+            y&amp;=a\left(x-(-2)\right)^2+4\\
+            y&amp;=a\left(x+2\right)^2+4
+            }\)<br />
+            <br /></div>
+          <div class="w3-col l6">Melalui <e>(&minus;3, 1)</e><br />
+            \(\eqalign{
+            1&amp;=a(-3+2)^2+4\\
+            1&amp;=a(-1)^2+4\\
+            1&amp;=a(1)+4\\
+            1&amp;=a+4\\
+            1-4&amp;=a\\
+            -3&amp;=a\\
+            a&amp;=-3
+            }\)<br />
+            <br />
+            <e><em>y</em> = &minus;3(<em>x</em> + 2)<sup>2</sup> + 4</e></div>
+        </div>
+          
+            </div>
+        <div class="w3-brown w3-padding tebal flo">Jadi, persamaan grafik fungsi kuadratnya adalah <e><em>y</em> = &minus;3(<em>x</em> + 2)<sup>2</sup> + 4</e>.<br><b>JAWAB: A</b><button class="w3-button w3-round w3-black w3-padding-small w3-right" onclick="this.parentNode.parentNode.parentNode.removeAttribute('open');">TUTUP</button></div>
+      </div>
+    </details>
+    <hr>
+  </div>
+
+  <div class="justify" id="2">
+    <h3>No. <span class="w3-badge w3-red nomor"></span></h3>
+    Grafik fungsi kuadrat <e><em>y</em> = <em>f</em> (<em>x</em>)</e> mempunyai titik puncak <e>(&minus;2, 11)</e> dan grafik memotong sumbu <em>x</em> di titik <e>(&minus;5, 0)</e> dan <e>(<em>a</em>, 0)</e>, maka nilai <e>8<em>a</em> + 2 =</e>
+    <div class="w3-row"> 
+     <div class="w3-col s4"> 
+     <ol class="pas1" type="A"> 
+     <li>6</li> 
+     <li>7</li> 
+     </ol> 
+     </div> 
+     <div class="w3-col s4"> 
+     <ol class="pas1" start="3" type="A"> 
+     <li>8</li> 
+     <li>9</li> 
+     </ol> 
+     </div> 
+     <div class="w3-col s4"> 
+     <ol class="pas1" start="5" type="A"> 
+     <li>10</li> 
+     </ol> 
+     </div> 
+     </div>    
+    <div class="bq w3-right w3-panel w3-leftbar w3-light-grey w3-cursive"><a href="https://s.id/matematikaidhamdaz" target="_blank" rel="noopener noreferrer">Matematika Zone Indonesia</a></div>
+    <details>
+        <summary class="peny">ALTERNATIF PENYELESAIAN</summary>
+        <div class="w3-card-4">
+            <div class="w3-padding w3-sand flo"><div class="w3-row">
+              <div class="w3-col l6">\(\begin{aligned}
+                -5+a&amp;=2(-2)\\
+                -5+a&amp;=-4\\
+                a&amp;=-4+5\\
+                &amp;=1
+                \end{aligned}\)<br />
+                <br /></div>
+              <div class="w3-col l6">\(\begin{aligned}
+                8a+2&amp;=8(1)+2\\
+                &amp;=8+2\\
+                &amp;=\boxed{\boxed{10}}
+                \end{aligned}\)</div>
+            </div>
+                </div>
+            <div class="w3-brown w3-padding tebal flo">Jadi, <e>8<em>a</em> + 2 = 10</e>.<br><b>JAWAB: E</b><button class="w3-button w3-black w3-padding-small w3-right" onclick="this.parentNode.parentNode.parentNode.removeAttribute('open');">TUTUP</button></div>
+        </div>
+    </details>
+    <hr>
+  </div>
+
+  <div class="justify" id="3">
+    <h3>No. <span class="w3-badge w3-red nomor"></span></h3>
+    Koordinat titik puncak grafik <e><em>f</em> (<em>x</em>) = <em>ax</em><sup>2</sup> + <em>bx</em> + <em>c</em></e> adalah <e>(1, 1)</e>. Jika <e><em>f</em> (0) = 3</e>, maka nilai <e><em>a</em> + <em>b</em> + <em>c</em></e> adalah
+    <div class="w3-row"> 
+     <div class="w3-col s4"> 
+     <ol class="pas1" type="A"> 
+     <li>4</li> 
+     <li>3</li> 
+     </ol> 
+     </div> 
+     <div class="w3-col s4"> 
+     <ol class="pas1" start="3" type="A"> 
+     <li>2</li> 
+     <li>1</li> 
+     </ol> 
+     </div> 
+     <div class="w3-col s4"> 
+     <ol class="pas1" start="5" type="A"> 
+     <li>0</li> 
+     </ol> 
+     </div> 
+     </div>    
+    <div class="bq w3-right w3-panel w3-leftbar w3-light-grey w3-cursive"><a href="https://s.id/matematikaidhamdaz" target="_blank" rel="noopener noreferrer">Matematika Zone Indonesia</a></div>
+    <details>
+        <summary class="peny">ALTERNATIF PENYELESAIAN</summary>
+        <div class="w3-card-4">
+            <div class="w3-padding w3-sand flo">\(\begin{aligned}
+                f(1)&=1\\
+                a(1)^2+b(1)+c&=1\\
+                a+b+c&=\boxed{\boxed{1}}
+                \end{aligned}\)</div>
+            <div class="w3-brown w3-padding tebal flo">Jadi, <e><em>a</em> + <em>b</em> + <em>c</em> = 1</e>.<br><b>JAWAB: D</b><button class="w3-button w3-black w3-padding-small w3-right" onclick="this.parentNode.parentNode.parentNode.removeAttribute('open');">TUTUP</button></div>
+        </div>
+    </details>
+    <hr>
+  </div>
+
+  <div class="justify" id="4">
+    <h3>No. <span class="w3-badge w3-red nomor"></span></h3>
+    Titik <e>(<em>a</em>, <em>b</em>)</e> terletak pada grafik <e><em>y</em> = <em>bx</em><sup>2</sup>  + (1 &minus; <em>b</em><sup>2</sup>)<em>x</em> &minus; 56</e>. Jika <e><em>a</em> &minus; <em>b</em> = 7</e>, maka nilai <em>ab</em> adalah
+    <div class="w3-row"> 
+     <div class="w3-col s4"> 
+     <ol class="pas1" type="A"> 
+     <li>7</li> 
+     <li>5</li> 
+     </ol> 
+     </div> 
+     <div class="w3-col s4"> 
+     <ol class="pas1" start="3" type="A"> 
+     <li>1</li> 
+     <li>&minus;1</li> 
+     </ol> 
+     </div> 
+     <div class="w3-col s4"> 
+     <ol class="pas1" start="5" type="A"> 
+     <li>&minus;5</li> 
+     </ol> 
+     </div> 
+     </div>    
+    <div class="bq w3-right w3-panel w3-leftbar w3-light-grey w3-cursive"><a href="https://s.id/matematikaidhamdaz" target="_blank" rel="noopener noreferrer">Grup Whatsapp</a></div>
+    <details>
+        <summary class="peny">ALTERNATIF PENYELESAIAN</summary>
+        <div class="w3-card-4">
+            <div class="w3-padding w3-sand flo">\(\begin{aligned}
+            b&=b(a)^2+\left(1-b^2\right)a-56\\
+            b&=a^2b+a-ab^2-56\\
+            56&=a-b+a^2b-ab^2\\
+            &=a-b+ab(a-b)\\
+            &=(a-b)(ab+1)\\
+            &=7(ab+1)\\
+            8&=ab+1\\
+            ab&=\color{blue}\boxed{\boxed{\color{black}7}}
+            \end{aligned}\)</div>
+            <div class="w3-brown w3-padding tebal flo">Jadi, <em>ab</em> = 7.<br><b>JAWAB: A</b><button class="w3-button w3-black w3-padding-small w3-right" onclick="this.parentNode.parentNode.parentNode.removeAttribute('open');">TUTUP</button></div>
+        </div>
+    </details>
+    <hr>
+  </div>
+
+  <div class="justify" id="5">
+    <h3>No. <span class="w3-badge w3-red nomor"></span></h3>
+    Jika fungsi kuadrat <e><em>y</em> = <em>f</em> (<em>x</em>)</e> mencapai minimum di titik <e>(1,&minus;4)</e> dan <e><em>f</em> (4) = 5</e>, maka <e><em>f</em> (<em>x</em>) =</e>
+<div class="w3-row"><div class="w3-col s6"><ol class="pas1" type="A"><li><e><em>x</em><sup>2</sup> + 2<em>x</em> + 3</e></li>
+<li><e><em>x</em><sup>2</sup> &minus; 2<em>x</em> + 3</e><br />
+</li>
+<li><e><em>x</em><sup>2</sup> &minus; 2<em>x</em> &minus; 3</e><br />
+</li>
+</ol></div><div class="w3-col s6"><ol class="pas1" start="4" type="A"><li><e>&minus;<em>x</em><sup>2</sup> + 2<em>x</em> + 3</e></li>
+<li><e>&minus;<em>x</em><sup>2</sup> + 2<em>x</em> &minus; 3</e><br />
+</li>
+</ol></div></div>
+    <div class="bq w3-right w3-panel w3-leftbar w3-light-grey w3-cursive"><a href="https://s.id/matematikaidhamdaz" target="_blank" rel="noopener noreferrer">Matematika Zone Indonesia</a></div>
+    <details>
+      <summary class="peny">ALTERNATIF PENYELESAIAN</summary>
+      <div class="w3-card-4">
+        <div class="w3-padding w3-sand flo">mencapai minimum berarti <e><em>x</em><sup>2</sup></e> positif. Dari semua pilihan jawaban, yang <e><em>x</em><sup>2</sup></e> nya positif, <e><em>a</em> = 1</e>.<br />
+          \(\begin{aligned}
+          y&=(x-x_p)^2-y_p\\
+          &=(x-1)^2-4\\
+          &=x^2-2x+1-4\\
+          &=\boxed{\boxed{x^2-2x-3}}
+          \end{aligned}\)</div>
+        <div class="w3-brown w3-padding tebal flo">Jadi, <e><em>x</em><sup>2</sup> &minus; 2<em>x</em> &minus; 3</e>.<br><b>JAWAB: C</b><button class="w3-button w3-black w3-padding-small w3-right" onclick="this.parentNode.parentNode.parentNode.removeAttribute('open');">TUTUP</button></div>
+      </div>
+    </details>
+    <hr>
+  </div>
+
+  <div class="justify" id="6">
+    <h3>No. <span class="w3-badge w3-red nomor"></span></h3>
+    Koordinat titik puncak grafik fungsi <e><em>y</em> = 4<em>x</em><sup>2</sup> + 12<em>x</em> + 6</e> adalah ....
+  <div class="w3-row">
+	<div class="w3-col s6">
+		<ol class="pas1" type="A">
+			<li class="pb">$\left(1\dfrac12,3\right)$</li>
+			<li>$\left(1\dfrac12,-3\right)$</li>
+		</ol>
+	</div>
+	<div class="w3-col s6">
+		<ol class="pas1" start="3" type="A">
+			<li class="pb">$\left(-1\dfrac12,3\right)$</li>
+			<li>$\left(-1\dfrac12,-3\right)$</li>
+		</ol>
+	</div>
+</div>
+    <div class="bq w3-right w3-panel w3-leftbar w3-light-grey w3-cursive"><a href="https://t.me/MatematikaZoneIdGrup/5153" target="_blank" rel="noopener noreferrer">Matematika Zone Indonesia</a></div>
+    <details>
+      <summary class="peny">ALTERNATIF PENYELESAIAN</summary>
+      <div class="w3-card-4">
+        <div class="w3-padding w3-sand flo"><div class="w3-row">
+          <div class="w3-col s6">
+            <e><em>a</em> = 4</e>, <e><em>b</em> = 12</e>, <e><em>c</em> = 6</e><br><br>
+        \(\eqalign{
+        x_p&=\dfrac{-b}{2a}\\
+        &=\dfrac{-12}{2(4)}\\
+        &=-\dfrac32\\
+            &=-1\dfrac12
+        }\)
+          </div>
+          <div class="w3-col s6">
+           \(\eqalign{
+            y_p&=4{x_p}^2+12x_p+6\\
+            &=4\left(-\dfrac32\right)^2+12\left(-\dfrac32\right)+6\\
+            &=4\left(\dfrac94\right)-18+6\\
+            &=9-12\\
+            &=-3
+            }\)
+          </div>
+        </div></div>
+        <div class="w3-brown w3-padding tebal flo">Jadi, titik puncaknya adalah $\left(-1\dfrac12,3\right)$.<br><b>JAWAB: D</b><button class="w3-button w3-black w3-padding-small w3-right" onclick="this.parentNode.parentNode.parentNode.removeAttribute('open');">TUTUP</button></div>
+      </div>
+    </details>
+    <hr>
+  </div>
+
+  <div class="justify" id="7">
+    <h3>No. <span class="w3-badge w3-red nomor"></span></h3>
+    Diberikan sebuah grafik sebagai berikut.
+    <div id="temsvg7" class="w3-center"></div>
+    Maka persamaan yang dapat dibentuk dari grafik tersebut adalah.....
+    <div class="w3-row">
+      <div class="w3-col s6">
+        <ol class="pas1" type="A">
+          <li><em>y</em> = <em>x</em><sup>2</sup> &minus; <em>x</em> + 6</li>
+          <li><em>y</em> = <em>x</em><sup>2</sup> + <em>x</em> + 6</li>
+          <li><em>y</em> = <em>x</em><sup>2</sup> &minus; <em>x</em> &minus; 6</li>
+        </ol>
+      </div>
+      <div class="w3-col s6">
+        <ol class="pas1" start="4" type="A">
+          <li><em>y</em> = <em>x</em><sup>2</sup> &minus; 2<em>x</em> &minus; 6</li>
+          <li><em>y</em> = <em>x</em><sup>2</sup> + 2<em>x</em> &minus; 6</li>
+        </ol>
+      </div>
+    </div>
+    <div class="bq w3-right w3-panel w3-leftbar w3-light-grey w3-cursive"><a href="https://s.id/matematikaidhamdaz" target="_blank" rel="noopener noreferrer">USP 2024 SMK Kab. Tangerang</a></div>
+    <details>
+      <summary class="peny">ALTERNATIF PENYELESAIAN</summary>
+      <div class="w3-card-4">
+        <div class="w3-padding w3-sand flo"><div class="w3-row">
+          <div class="w3-col m6">Titik puncak: <e>(1, &minus;7)</e><br>
+          \(\begin{aligned}
+          y&=a\left(x-x_p\right)^2+y_p\\
+          &=a\left(x-1\right)^2-7
+          \end{aligned}\) <br><br>
+          Melalui (0, &minus;6) <br>
+          \(\begin{aligned}
+          -6&=a(0-1)^2-7\\
+          -6&=a-7\\
+          a&=1
+          \end{aligned}\) <br><br></div>
+          <div class="w3-col m6">\(\begin{aligned}
+          y&=1(x-1)^2-7\\
+          &=x^2-2x+1-7\\
+          &=x^2-2x-6
+          \end{aligned}\)</div>
+        </div>
+          
+          
+        </div>
+        <div class="w3-brown w3-padding tebal flo">Jadi, persamaan yang dapat dibentuk dari grafik tersebut adalah <em>y</em> = <em>x</em><sup>2</sup> &minus; 2<em>x</em> &minus; 6.<br><b>JAWAB: D</b><button class="w3-button w3-black w3-padding-small w3-right" onclick="this.parentNode.parentNode.parentNode.removeAttribute('open');">TUTUP</button></div>
+      </div>
+    </details>
+    <hr>
+    <script>
+      var spg7 = kocabuat("temsvg7",[-2,4],[-7,0])
+      function fung7(x){
+        return (x*x-2*x-6)
+      }
+      var grafung7 = kocaGrafung(spg7,fung7);
+      var noktah7_1 = kocaLingkaran(spg7,[1,-7],0.1,{isi:"red",warnagaris:"red"})
+      var noktah7_2 = kocaLingkaran(spg7,[2,-6],0.1,{isi:"red",warnagaris:"red"})
+      var noktah7_3 = kocaLingkaran(spg7,[0,-6],0.1,{isi:"red",warnagaris:"red"})
+      kocaLabelTitik(spg7,[1,-7],"(1, &minus;7)",{anchor:"middle",baseline:"hanging",yplus:-0.2})
+      kocaLabelTitik(spg7,[2,-6],"(2, &minus;6)",{anchor:"start",baseline:"mathematical",xplus:0.2})
+    </script>
+  </div>
+
+  <div class="justify" id="8">
+    <h3>No. <span class="w3-badge w3-red nomor"></span></h3>
+    Persamaan sumbu simetri parabola <e><em>y</em> = 8 &minus; 2<em>x</em> &minus; <em>x</em><sup>2</sup></e> adalah
+    <div class="bq w3-right w3-panel w3-leftbar w3-light-grey w3-cursive"><a href="https://t.me/MatematikaZoneIdGrup/7876" target="_blank" rel="noopener noreferrer">Matematika Zone Indonesia</a></div>
+    <details>
+      <summary class="peny">ALTERNATIF PENYELESAIAN</summary>
+      <div class="w3-card-4">
+        <div class="w3-padding w3-sand flo"><e><em>a</em> = &minus;1</e>, <e><em>b</em> = &minus;2</e>, <e><em>c</em> = 8</e><br><br>
+          \(\eqalign{
+          x&=\dfrac{-b}{2a}\\
+          &=\dfrac{-(-2)}{2(-1)}\\
+          &=\dfrac2{-2}\\
+          &=-1
+          }\)</div>
+        <div class="w3-brown w3-padding tebal flo">Jadi, persamaan sumbu simetri parabola <e><em>y</em> = 8 &minus; 2<em>x</em> &minus; <em>x</em><sup>2</sup></e> adalah <e>x= &minus;1</e>.<button class="w3-button w3-black w3-padding-small w3-right" onclick="this.parentNode.parentNode.parentNode.removeAttribute('open');">TUTUP</button></div>
+      </div>
+    </details>
+    <hr>
+  </div>
+
+  <div class="justify" id="9">
+    <h3>No. <span class="w3-badge w3-red nomor"></span></h3>
+    Jika nilai ekstrem fungsi <e><em>y</em> = <em>x</em><sup>2</sup> + <em>nx</em> + (11 + <em>n</em>)</e> adalah 3, maka harga <e><em>n</em> = ....</e>
+    <div class="w3-row"> 
+     <div class="w3-col s4"> 
+     <ol class="pas1" type="A"> 
+     <li>4</li> 
+     <li>8</li> 
+     </ol> 
+     </div> 
+     <div class="w3-col s4"> 
+     <ol class="pas1" start="3" type="A"> 
+     <li>4 atau &minus;8</li> 
+     <li>4 atau 8</li> 
+     </ol> 
+     </div> 
+     <div class="w3-col s4"> 
+     <ol class="pas1" start="5" type="A"> 
+     <li>&minus;4 atau 8</li> 
+     </ol> 
+     </div> 
+     </div>    
+    <div class="bq w3-right w3-panel w3-leftbar w3-light-grey w3-cursive"><a href="/2023/12/download-big-book-matematika-sma.html" target="_blank" rel="noopener noreferrer">Big Book Matematika SMA</a></div>
+    <details>
+      <summary class="peny">ALTERNATIF PENYELESAIAN</summary>
+      <div class="w3-card-4">
+        <div class="w3-padding w3-sand flo">\(\begin{aligned}
+        \dfrac{D}{-4a}&=3\\[4pt]
+        \dfrac{b^2-4ac}{-4a}&=3\\[4pt]
+        \dfrac{n^2-4(1)(11+n)}{-4(1)}&=3\\[4pt]
+        n^2-44-4n&=-12\\
+        n^2-4n-32&=0\\
+        (n+4)(n-8)&=0
+        \end{aligned}\) <br>
+        <em>n</em> = &minus;4, atau <em>n</em> = 8.
+      </div>
+        <div class="w3-brown w3-padding tebal flo">Jadi, harga <e><em>n</em> = &minus;4 atau 8.</e><br><b>JAWAB: E</b><button class="w3-button w3-black w3-padding-small w3-right" onclick="this.parentNode.parentNode.parentNode.removeAttribute('open');">TUTUP</button></div>
+      </div>
+    </details>
+    <hr>
+  </div>
+
+  <div class="justify" id="10">
+    <h3>No. <span class="w3-badge w3-red nomor"></span></h3>
+    Persamaan grafik fungsi kuadrat pada gambar di bawah ini adalah ....
+    <div id="temsvg10" class="w3-center"></div>
+    <div class="w3-row">
+      <div class="w3-col s6">
+        <ol class="pas1" type="A">
+          <li>3<em>y</em> = <em>x</em><sup>2</sup> &minus; 8<em>x</em> + 13</li>
+          <li>3<em>y</em> = <em>x</em><sup>2</sup> &minus; 8<em>x</em> + 15</li>
+          <li>3<em>y</em> = <em>x</em><sup>2</sup> &minus; 8<em>x</em> + 17</li>
+        </ol>
+      </div>
+      <div class="w3-col s6">
+        <ol class="pas1" start="4" type="A">
+          <li><em>y</em> = 2<em>x</em><sup>2</sup> &minus; 16<em>x</em> + 31</li>
+          <li>3<em>y</em> = <em>x</em><sup>2</sup> &minus; 8<em>x</em> + 19</li>
+        </ol>
+      </div>
+    </div>
+    <div class="bq w3-right w3-panel w3-leftbar w3-light-grey w3-cursive"><a href="http://" target="_blank" rel="noopener noreferrer">USP SMK Kab. Tangerang 2023</a></div>
+    <details>
+      <summary class="peny">ALTERNATIF PENYELESAIAN</summary>
+      <div class="w3-card-4">
+        <div class="w3-padding w3-sand flo">Titik puncaknya adalah <e>(4, &minus;1)</e><br>
+          <em>y</em> = <em>a</em>(<em>x</em> &minus; 4)<sup>2</sup> &minus; 1 <br><br>
+          Melalui titik (1, 2) <br>
+          \(\begin{aligned}
+          2&=a(1-4)^2-1\\
+          2+1&=a(-3)^2\\
+          3&=9a\\
+          a&=\dfrac39\\
+          a&=\boxed{\dfrac13}
+          \end{aligned}\) <br><br>
+          \(\begin{aligned}
+          y&=\dfrac13(x-4)^2-1&{\color{red}\times3}\\
+          3y&=(x-4)^2-3\\
+          &=x^2-8x+16-3\\
+          &=x^2-8x+13
+          \end{aligned}\)
+        </div>
+        <div class="w3-brown w3-padding tebal flo">Jadi, pPersamaan grafik fungsi kuadrat pada gambar di atas adalah <e>3<em>y</em> = <em>x</em><sup>2</sup> &minus; 8<em>x</em> + 13.</e><br><b>JAWAB: A</b><button class="w3-button w3-black w3-padding-small w3-right" onclick="this.parentNode.parentNode.parentNode.removeAttribute('open');">TUTUP</button></div>
+      </div>
+    </details>
+    <hr>
+    <script>
+      var spg10 = kocabuat("temsvg10",[0,7],[-1,4])
+      function fung10(x){
+        return (x*x-8*x+13)/3
+      }
+      kocaGrafung(spg10,fung10);
+      kocaSegmen(spg10,[[4,0],[4,-1]],{warna:"blue", dash:"5 5"})
+      kocaSegmen(spg10,[[0,-1],[4,-1]],{warna:"blue", dash:"5 5"})
+      kocaSegmen(spg10,[[1,0],[1,2]],{warna:"blue", dash:"5 5"})
+      kocaSegmen(spg10,[[0,2],[7,2]],{warna:"blue", dash:"5 5"})
+      kocaSegmen(spg10,[[7,0],[7,2]],{warna:"blue", dash:"5 5"})
+      kocaLingkaran(spg10,[4,-1],0.1,{isi:"black"})
+      kocaLingkaran(spg10,[1,2],0.1,{isi:"black"})
+      kocaLingkaran(spg10,[7,2],0.1,{isi:"black"})
+    </script>
+  </div>
+
+<div class="navi w3-bar w3-border w3-round w3-hide">
+  </div>
+  <script>soal(fungkuad,1,1)</script>
+</div>
+</body>
+</html> 
